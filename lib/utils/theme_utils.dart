@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'app_color.dart';
-import 'app_text_style.dart';
 import 'create_material_color.dart';
 
 class ThemeUtils {
@@ -17,7 +16,7 @@ class ThemeUtils {
       //bottomNavigationBarTheme: lightBottomNavigationBarTheme,
       //inputDecorationTheme: lightInputDecorationTheme,
       dividerColor: AppColor.darkGrey,
-      //colorScheme: const ColorScheme.light(),
+      colorScheme: const ColorScheme.light(),
       primarySwatch: createMaterialColor(AppColor.primaryColor),
       fontFamily: "Poppins",
     );

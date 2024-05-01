@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/screens/Home/home_List_screen.dart';
+import 'package:health_care/screens/Home/View/home_List_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
+import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
+import 'package:health_care/widgets/custom/custom_button.dart';
+import 'package:health_care/widgets/custom/custom_dailog.dart';
 
 class OnboardingController extends GetxController {
   final PageController pageController = PageController();
+  TextEditingController zipCodeController = TextEditingController();
   RxInt currentPage = 0.obs;
   final List<PageData> pages = [
     PageData(
@@ -38,7 +42,10 @@ class OnboardingController extends GetxController {
         curve: Curves.ease,
       );
     } else {
-      Get.to(const HomeListScreen());
+      Get.dialog(CustomDailog(
+        title: 'Add Zipcode',
+        controller: zipCodeController,
+      ));
     }
   }
 

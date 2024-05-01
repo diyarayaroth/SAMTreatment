@@ -14,87 +14,90 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: Get.height * 0.80,
-                child: PageView.builder(
-                  controller: controller.pageController,
-                  itemCount: controller.pages.length,
-                  onPageChanged: controller.onPageChanged,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: controller.pages[index].padding,
-                          child: Image.asset(
-                            controller.pages[index].onImage,
-                            fit: BoxFit.fill,
-                            height: Get.height * 0.50,
-                            width: Get.width,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: Get.height * 0.80,
+                  child: PageView.builder(
+                    controller: controller.pageController,
+                    itemCount: controller.pages.length,
+                    onPageChanged: controller.onPageChanged,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: controller.pages[index].padding,
+                            child: Image.asset(
+                              controller.pages[index].onImage,
+                              fit: BoxFit.fill,
+                              height: Get.height * 0.50,
+                              width: Get.width,
+                            ),
                           ),
-                        ),
-                        SizedBoxH103(),
-                        PrimaryPadding(
-                          child: Column(
-                            children: [
-                              Text(controller.pages[index].title,
+                          SizedBoxH103(),
+                          PrimaryPadding(
+                            child: Column(
+                              children: [
+                                Text(controller.pages[index].title,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.blackColor,
+                                    )),
+                                Text(
+                                  controller.pages[index].subtitle,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.blackColor,
-                                  )),
-                              Text(
-                                controller.pages[index].subtitle,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: AppColor.greyColor,
+                                    fontSize: 14,
+                                    color: AppColor.greyColor,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Obx(
+              () => Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: CustomButton(
+                  txtColor: AppColor.whiteColor,
+                  bgColor: AppColor.primaryColor,
+                  text: controller.currentPage.value ==
+                          controller.pages.length - 1
+                      ? AppStrings.getStart
+                      : AppStrings.next,
+                  borderRadius: 10,
+                  height: Sizes.s50.h,
+                  width: Sizes.s330.w,
+                  onTap: controller.onGetStarted,
                 ),
               ),
-            ],
-          ),
-          Obx(
-            () => Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: CustomButton(
-                txtColor: AppColor.whiteColor,
-                bgColor: AppColor.primaryColor,
-                text:
-                    controller.currentPage.value == controller.pages.length - 1
-                        ? AppStrings.getStart
-                        : AppStrings.next,
-                borderRadius: 10,
-                height: Sizes.s50.h,
-                width: Sizes.s330.w,
-                onTap: controller.onGetStarted,
+            ),
+            Obx(
+              () => GestureDetector(
+                onTap: controller.onGetSkip,
+                child: Text(
+                  controller.currentPage.value == controller.pages.length - 3
+                      ? AppStrings.skip
+                      : AppStrings.previous,
+                  style:
+                      const TextStyle(color: AppColor.greyColor, fontSize: 14),
+                ),
               ),
             ),
-          ),
-          Obx(
-            () => GestureDetector(
-              onTap: controller.onGetSkip,
-              child: Text(
-                controller.currentPage.value == controller.pages.length - 3
-                    ? AppStrings.skip
-                    : AppStrings.previous,
-                style: const TextStyle(color: AppColor.greyColor, fontSize: 14),
-              ),
-            ),
-          ),
-          const SizedBox(height: 15),
-        ],
+            const SizedBox(height: 15),
+          ],
+        ),
       ),
     );
   }

@@ -11,9 +11,11 @@ class AppAsset {
   static const String on1 = "${imagePath}on1.png";
   static const String on2 = "${imagePath}on2.png";
   static const String on3 = "${imagePath}on3.png";
+  static const String addZip = "${imagePath}add_zip.png";
 
   //home
   static const String doctor1 = "${imagePath}dr1.png";
+  static const String drawerImg = "${imagePath}drawer_img.png";
 
   //BOTTOM IMAGE
   static const String home = "${iconPath}home.png";
