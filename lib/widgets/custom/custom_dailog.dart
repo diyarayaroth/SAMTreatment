@@ -12,20 +12,25 @@ import '../../utils/app_sizes.dart';
 
 class CustomDailog extends StatefulWidget {
   final String title;
+  final bool isBack;
   final TextEditingController? controller;
 
   const CustomDailog({
     super.key,
     required this.title,
+    required this.isBack,
     this.controller,
   });
 
   static Future<bool> show(
-      BuildContext context, String title, String subTitle) async {
+      BuildContext context, String title, String subTitle, bool isBack) async {
     return await showCupertinoDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => CustomDailog(title: title),
+      builder: (context) => CustomDailog(
+        title: title,
+        isBack: isBack,
+      ),
     );
   }
 
@@ -59,6 +64,23 @@ class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    widget.isBack
+                        ? InkWell(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                              size: Sizes.s30,
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ],
+                ),
                 verticalSpacing(20),
                 Center(
                   child: Image.asset(
@@ -88,8 +110,10 @@ class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
                   text: "Start",
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
+                      homeController.filteredTopics.clear();
                       debugPrint(
                           "Zip code check===> ${homeController.zipCodeController.text}");
+
                       homeController.getDoctorList(int.parse(
                           "${homeController.zipCodeController.text.replaceAll('"', '').replaceAll('"', '').toString()}"));
                       Get.back();

@@ -30,6 +30,7 @@ class HomeScreenController extends GetxController {
   _showDialog() async {
     await Future.delayed(Duration(milliseconds: 1));
     Get.dialog(CustomDailog(
+      isBack: false,
       title: 'Add Zipcode',
       controller: zipCodeController,
     ));

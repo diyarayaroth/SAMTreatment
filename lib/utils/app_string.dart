@@ -20,7 +20,7 @@ class AppStrings {
   static const String search = 'Search';
   static const String zipCode = 'Zip Code';
   static const String zipCodeOrCity = 'Zip code or City';
-  static const String bookAppointment = 'Book Appointment';
+  static const String bookAppointment = 'Doctor Appointment';
   static const String aboutDoctor = 'About Doctor';
   static const String searchDoctor = 'Search Doctor';
   static const String insurance = 'Insurance';

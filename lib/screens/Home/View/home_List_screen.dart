@@ -64,10 +64,10 @@ class _HomeListScreenState extends State<HomeListScreen> {
             Icons.location_on_outlined,
             size: 25,
           ),
-          tooltip: 'Open shopping cart',
+          tooltip: 'Open Dailog',
           onPressed: () {
-            homeController.filteredTopics.clear();
             Get.dialog(CustomDailog(
+              isBack: true,
               title: 'Add Zipcode',
               controller: homeController.zipCodeController,
             ));
