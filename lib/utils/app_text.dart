@@ -21,18 +21,3 @@ Widget appText(
       textAlign: textAlign,
       softWrap: softWrap);
 }
-
-// TextStyle defaultTextStyle(
-//     {Color? color,
-//     double? height,
-//     double? fontSize,
-//     FontWeight? fontWeight,
-//     TextDecoration? decoration}) {
-//   return GoogleFonts.rubik(
-//     fontSize: fontSize ?? 11.sp,
-//     fontWeight: fontWeight ?? FontWeight.w400,
-//     color: color ?? black800,
-//     decoration: decoration,
-//     height: height,
-//   );
-// }

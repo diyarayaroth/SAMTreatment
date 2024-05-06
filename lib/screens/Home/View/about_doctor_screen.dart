@@ -7,7 +7,6 @@ import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
 import 'package:health_care/utils/app_text_style.dart';
 import 'package:health_care/utils/helper.dart';
-import 'package:health_care/widgets/custom/custom_sizebox.dart';
 import 'package:health_care/widgets/primary/primary_appbar.dart';
 
 class AboutDoctorScreen extends StatelessWidget {
@@ -22,13 +21,13 @@ class AboutDoctorScreen extends StatelessWidget {
   });
   String getImage(String gender) {
     switch (gender) {
-      case 'Male':
+      case AppStrings.male:
         return AppAsset.doctorMale;
-      case 'Female':
+      case AppStrings.female:
         return AppAsset.doctorFemale;
-      case 'Other':
+      case AppStrings.Other:
         return AppAsset.doctor1;
-      case 'unknown':
+      case AppStrings.unknown:
         return AppAsset.doctor1;
       default:
     }
@@ -56,7 +55,7 @@ class AboutDoctorScreen extends StatelessWidget {
                     onPressed: () {
                       Get.back();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back_ios,
                       color: Colors.white,
                     ),
@@ -71,9 +70,7 @@ class AboutDoctorScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 150,
-              ),
+              verticalSpacing(150),
               Expanded(
                 child: Container(
                   height: Get.height * 0.3,
@@ -89,7 +86,7 @@ class AboutDoctorScreen extends StatelessWidget {
                     alignment: Alignment(-0.7, -1.45),
                     children: [
                       Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.grey,
                           borderRadius: BorderRadius.all(
                             Radius.circular(100),
@@ -105,10 +102,7 @@ class AboutDoctorScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: Sizes.s80, horizontal: Sizes.s26),
-                        child: Container(
-                          // decoration: BoxDecoration(
-                          //   color: Colors.red,
-                          // ),
+                        child: SizedBox(
                           height: Get.height,
                           width: Get.width,
                           child: Column(
@@ -119,34 +113,32 @@ class AboutDoctorScreen extends StatelessWidget {
                                   providerElement.provider.name ?? " ",
                                   style: AppTextStyle.title,
                                 ),
-                                SizedBoxH5(),
+                                verticalSpacing(5),
                                 Text('Specialist Cardiologist',
                                     style: AppTextStyle.heading14Black700
                                         .copyWith(
                                             fontSize: Sizes.s16,
                                             color: Colors.grey.shade700,
                                             fontWeight: FontWeight.w500)),
-                                SizedBoxH5(),
+                                verticalSpacing(5),
                                 Text(
                                   providerElement.provider.languages
                                           .toString() ??
                                       " ",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
                                   ),
                                 ),
-                                SizedBoxH20(),
-                                //+8801800000000
+                                verticalSpacing(20),
+
                                 Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.phone,
                                       color: AppColor.blackColor,
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    horizontalSpacing(10),
                                     Text(
                                       providerElement.address.phone ?? " ",
                                       style: AppTextStyle.heading14Black700
@@ -156,17 +148,15 @@ class AboutDoctorScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBoxH20(),
+                                verticalSpacing(20),
                                 //A-5 Avalon Complex, Bandra Mumbai
                                 Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.home,
                                       color: AppColor.blackColor,
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    horizontalSpacing(10),
                                     SizedBox(
                                       width: 270,
                                       child: Text(

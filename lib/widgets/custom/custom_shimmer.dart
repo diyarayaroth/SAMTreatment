@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
-import 'package:health_care/widgets/custom/custom_sizebox.dart';
+import 'package:health_care/utils/helper.dart';
 import 'package:shimmer/shimmer.dart';
 
 Widget shimmerEffect() {
@@ -55,7 +55,7 @@ Widget shimmerEffect() {
                             ),
                           ),
                         ),
-                        SizedBoxH10(),
+                        verticalSpacing(10),
                         Shimmer.fromColors(
                           baseColor: AppColor.lightGrey,
                           highlightColor: AppColor.whiteColor,
@@ -72,7 +72,7 @@ Widget shimmerEffect() {
                     )
                   ],
                 ),
-                SizedBoxH10(),
+                verticalSpacing(10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

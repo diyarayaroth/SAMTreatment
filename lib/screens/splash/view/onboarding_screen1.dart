@@ -4,8 +4,8 @@ import 'package:health_care/screens/splash/Controller/onboarding_controller.dart
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
+import 'package:health_care/utils/helper.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
-import 'package:health_care/widgets/custom/custom_sizebox.dart';
 import 'package:health_care/widgets/primary/primary_padding.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -37,7 +37,7 @@ class OnboardingScreen extends StatelessWidget {
                               width: Get.width,
                             ),
                           ),
-                          SizedBoxH103(),
+                          verticalSpacing(103),
                           PrimaryPadding(
                             child: Column(
                               children: [

@@ -8,7 +8,6 @@ import 'package:health_care/utils/app_string.dart';
 import 'package:health_care/utils/app_text_style.dart';
 import 'package:health_care/utils/helper.dart';
 import 'package:health_care/utils/screen_utils.dart';
-import 'package:health_care/widgets/custom/custom_sizebox.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -38,7 +37,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         horizontal: Sizes.s12, vertical: Sizes.s14),
                     child: Column(
                       children: [
-                        SizedBoxH55(),
+                        verticalSpacing(55),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

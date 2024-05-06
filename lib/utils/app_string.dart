@@ -25,6 +25,10 @@ class AppStrings {
   static const String searchDoctor = 'Search Doctor';
   static const String insurance = 'Insurance';
   static const String help = 'Help';
+  static const String male = 'Male';
+  static const String female = 'Female';
+  static const String Other = 'Other';
+  static const String unknown = 'unknown';
 
   // Dashboard
 

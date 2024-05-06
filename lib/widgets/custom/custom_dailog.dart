@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/Services/Shared_pref.dart';
 import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
-import 'package:health_care/screens/Home/View/home_List_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_text_style.dart';
+import 'package:health_care/utils/helper.dart';
 import 'package:health_care/utils/validation_mixin.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
-import 'package:health_care/widgets/custom/custom_sizebox.dart';
 import 'package:health_care/widgets/primary/primary_textfield.dart';
 import '../../utils/app_sizes.dart';
 
@@ -61,7 +59,7 @@ class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBoxH20(),
+                verticalSpacing(20),
                 Center(
                   child: Image.asset(
                     AppAsset.addZip,
@@ -69,12 +67,12 @@ class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
                     width: Sizes.s120,
                   ),
                 ),
-                SizedBoxH34(),
+                verticalSpacing(34),
                 Text(
                   widget.title,
                   style: AppTextStyle.regulerS14Black,
                 ),
-                SizedBoxH10(),
+                verticalSpacing(10),
                 Form(
                   key: _formKey,
                   child: PrimaryTextField(
@@ -82,9 +80,10 @@ class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
                     controller: widget.controller,
                     validator: zipCodeValidation,
                     keyboardInputType: TextInputType.number,
+                    maxLength: 5,
                   ),
                 ),
-                SizedBoxH20(),
+                verticalSpacing(10),
                 CustomButton(
                   text: "Start",
                   onTap: () {

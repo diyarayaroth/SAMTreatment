@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/Services/Shared_pref.dart';
 import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
+import 'package:health_care/utils/helper.dart';
 import 'package:health_care/utils/screen_utils.dart';
-import 'package:health_care/widgets/custom/custom_book_container.dart';
+import 'package:health_care/widgets/custom/custom_doctor_card.dart';
 import 'package:health_care/widgets/custom/custom_dailog.dart';
 import 'package:health_care/widgets/custom/custom_shimmer.dart';
-import 'package:health_care/widgets/custom/custom_sizebox.dart';
 import 'package:health_care/widgets/custom/drawer_widget.dart';
 import 'package:health_care/widgets/primary/primary_appbar.dart';
 import 'package:health_care/widgets/primary/primary_padding.dart';
@@ -60,13 +59,27 @@ class _HomeListScreenState extends State<HomeListScreen> {
         onBackPressed: () {
           openDrawer();
         },
+        action: IconButton(
+          icon: const Icon(
+            Icons.location_on_outlined,
+            size: 25,
+          ),
+          tooltip: 'Open shopping cart',
+          onPressed: () {
+            homeController.filteredTopics.clear();
+            Get.dialog(CustomDailog(
+              title: 'Add Zipcode',
+              controller: homeController.zipCodeController,
+            ));
+          },
+        ),
       ),
       body: WillPopScope(
         onWillPop: () async => false,
         child: PrimaryPadding(
           child: Column(
             children: [
-              SizedBoxH10(),
+              verticalSpacing(10),
               PrimaryTextField(
                 controller: homeController.searchController,
                 onChanged: (value) {
@@ -76,25 +89,31 @@ class _HomeListScreenState extends State<HomeListScreen> {
                 hintText: AppStrings.searchDoctor,
                 prefix: Icon(Icons.search),
               ),
-              SizedBoxH10(),
+              verticalSpacing(10),
               Expanded(
                 child: Obx(
                   () => homeController.isLoading.value == true
                       ? shimmerEffect()
-                      : ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: homeController.filteredTopics.length,
-                          padding: EdgeInsets.symmetric(vertical: Sizes.s10.h),
-                          itemBuilder: (context, index) {
-                            return DoctorComponent(
-                              providerElement:
-                                  homeController.filteredTopics[index],
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(height: 10);
-                          },
-                        ),
+                      : homeController.filteredTopics.isEmpty
+                          ? const Center(
+                              child: Text('Invalid zipcode or fips provided'),
+                            )
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: homeController.filteredTopics.length,
+                              padding:
+                                  EdgeInsets.symmetric(vertical: Sizes.s10.h),
+                              itemBuilder: (context, index) {
+                                return DoctorComponent(
+                                  providerElement:
+                                      homeController.filteredTopics[index],
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return SizedBox(height: 10);
+                              },
+                            ),
                 ),
               ),
 

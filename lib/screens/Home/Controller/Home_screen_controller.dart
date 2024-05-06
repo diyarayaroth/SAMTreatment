@@ -40,7 +40,9 @@ class HomeScreenController extends GetxController {
     if (value.isNotEmpty) {
       List<ProviderElement> dummyListData = [];
       for (var map in getAllDoctorList) {
-        if (map.provider.name.toLowerCase().contains(value.toLowerCase())) {
+        if (map.provider.name.toLowerCase().contains(value.toLowerCase()) ||
+            map.provider.specialties.any((specialty) =>
+                specialty.toLowerCase().contains(value.toLowerCase()))) {
           dummyListData.addAll([map]);
         }
       }
