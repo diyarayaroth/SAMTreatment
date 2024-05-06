@@ -15,7 +15,10 @@ class AppAsset {
 
   //home
   static const String doctor1 = "${imagePath}dr1.png";
-  static const String drawerImg = "${imagePath}drawer_img.png";
+  static const String doctorMale = "${imagePath}doc_male.png";
+  static const String doctorFemale = "${imagePath}doc_female.png";
+  static const String drawerImg = "${imagePath}drawer.png";
+  static const String frame = "${imagePath}Frame.png";
 
   //BOTTOM IMAGE
   static const String home = "${iconPath}home.png";

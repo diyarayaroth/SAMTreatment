@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:health_care/Services/Shared_pref.dart';
 import 'package:health_care/screens/Home/View/home_List_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
@@ -42,10 +43,10 @@ class OnboardingController extends GetxController {
         curve: Curves.ease,
       );
     } else {
-      Get.dialog(CustomDailog(
-        title: 'Add Zipcode',
-        controller: zipCodeController,
-      ));
+      Get.to(const HomeListScreen());
+      Preferances.prefSetBool("isUser", true);
+
+      // Preferances.setString("isUser", "1");
     }
   }
 

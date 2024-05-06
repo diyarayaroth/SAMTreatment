@@ -10,41 +10,6 @@ void main() {
   runApp(const MyApp());
 }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     final botToastBuilder = BotToastInit();
-//     return GetMaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       themeMode: ThemeMode.system,
-//       theme: ThemeUtils.lightTheme,
-//       title: 'Flutter Demo',
-//       //home: HistoryScreen(),
-//       // home: AppointmentScreen(),
-//       //home: BookAppointmentScreen(),
-//       home: SplashScreen(),
-//       builder: (context, child) {
-//         return ScrollConfiguration(
-//           behavior: const _ScrollBehaviorModified(),
-//   child: LayoutBuilder(
-//     builder: (BuildContext context, BoxConstraints constraints) {
-//       ScreenUtil.init(constraints,
-//           designSize:
-//               Size(constraints.maxWidth, constraints.maxHeight));
-//       child = botToastBuilder(context, child);
-//       return child ?? const SizedBox.shrink();
-//     },
-//   ),
-// );
-//       },
-//       //home: First(),
-//     );
-//   }
-// }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -76,25 +41,6 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-
-    /* MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-         
-          builder: (context, widget) {
-            return ScrollConfiguration(
-              behavior: ,
-              // ignore: deprecated_member_use
-              child: MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor:  ).copyWith(boldText: false), child: widget!),
-            );
-          },
-        ); */
-
-    //  GetMaterialApp(
-    //   title: 'Flutter Demo',
-    //   debugShowCheckedModeBanner: false,
-    // theme:
-    //   home: const SplashScreen(),
-    // );
   }
 }
 

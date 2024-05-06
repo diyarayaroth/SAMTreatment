@@ -43,6 +43,8 @@ dependencies:
   url_launcher: ^6.2.6
   shared_preferences: ^2.2.3
   http:
+  shimmer: ^3.0.0
+  skeletons: ^0.0.3
 
 
 dev_dependencies:

@@ -1,51 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/Api/api_services.dart';
+import 'package:health_care/Api/network.dart';
 import 'package:health_care/Services/Shared_pref.dart';
+
+import 'package:health_care/constants/baseurl.dart';
 import 'package:health_care/screens/Home/Model/doctor_list_model.dart';
-import 'package:health_care/utils/loder.dart';
+import 'package:health_care/utils/log_utils.dart';
+import 'package:health_care/widgets/custom/custom_dailog.dart';
 
 class HomeScreenController extends GetxController {
-  Rx<DoctorListModel> doctorListResponse = DoctorListModel().obs;
-  RxString zipCode = "".obs;
+  TextEditingController searchController = TextEditingController();
+  TextEditingController zipCodeController = TextEditingController();
+  List<ProviderElement> getAllDoctorList = <ProviderElement>[].obs;
+  List<ProviderElement> getDoctorListRes = <ProviderElement>[].obs;
+
+  RxBool isLoading = false.obs;
+  // RxBool isSearching = false.obs;
+  List<ProviderElement> filteredTopics = <ProviderElement>[].obs;
 
   @override
   void onInit() {
-    getZipCode();
+    _showDialog();
+    filteredTopics.addAll(getAllDoctorList);
+    debugPrint("Check my doctor list 21 ${filteredTopics.length}");
 
     super.onInit();
   }
 
-  getZipCode() async {
-    debugPrint("get Zip called");
-    zipCode.value = await Preferances.getString("zipcode") ?? "";
-    debugPrint("get Zip code===> ${zipCode.value}");
-    getDoctorList(int.parse(
-        "${zipCode.value.replaceAll('"', '').replaceAll('"', '').toString()}"));
+  _showDialog() async {
+    await Future.delayed(Duration(milliseconds: 1));
+    Get.dialog(CustomDailog(
+      title: 'Add Zipcode',
+      controller: zipCodeController,
+    ));
   }
 
-  getDoctorList(
-    int? zip,
-  ) async {
-    String? apiUrl =
-        "https://marketplace.api.healthcare.gov/api/v1/providers/search?apikey=i5809cXUIhvlCabIGOOyWD42c4MW1Wyv&year=2024&q=doctor&zipcode=$zip&type=Individual";
-    debugPrint("Check my api url $apiUrl}");
-    Loader.showLoader();
-
-    return Api.getDoctorListApi(apiUrl).then((response) {
-      debugPrint("Check count my loader : 1 $response");
-      if (response != null) {
-        debugPrint("Check my countloader 2");
-        doctorListResponse.value = DoctorListModel.fromJson(response);
-
-        debugPrint("Check doctorListResponse 27 ${doctorListResponse}");
-        Loader.hideLoader();
-      } else {
-        debugPrint("Check my count loader 3");
-        Loader.hideLoader();
-        throw Exception(response.data);
+  void searchQuery(String value) {
+    debugPrint('search Query Function called : $value');
+    if (value.isNotEmpty) {
+      List<ProviderElement> dummyListData = [];
+      for (var map in getAllDoctorList) {
+        if (map.provider.name.toLowerCase().contains(value.toLowerCase())) {
+          dummyListData.addAll([map]);
+        }
       }
-      // ignore: invalid_return_type_for_catch_error, avoid_print
-    }).catchError((err) => print('error$err'));
+      filteredTopics.clear();
+      filteredTopics.addAll(dummyListData);
+      return;
+    } else {
+      filteredTopics.clear();
+      filteredTopics.addAll(getAllDoctorList);
+    }
+  }
+
+  getDoctorList(int? zip) async {
+    isLoading.value = true;
+    String? apiUrl =
+
+        //"https://marketplace.api.healthcare.gov/api/v1/providers/search?apikey=i5809cXUIhvlCabIGOOyWD42c4MW1Wyv&year=2024&q=doctor&zipcode=$zip&type=Individual";
+        "${baseUrl}providers/search?apikey=$apiKey&year=2024&q=doctor&zipcode=$zip&type=Individual";
+    debugPrint("Check my api url $apiUrl}");
+
+    try {
+      var result = await NetworkAPICall().get(apiUrl);
+      if (result != null) {
+        DoctorListModel doctorList = DoctorListModel.fromJson(result);
+        getAllDoctorList = doctorList.providers;
+        filteredTopics.addAll(getAllDoctorList);
+        isLoading.value = false;
+      } else {
+        isLoading.value = false;
+        throw Exception(result.data);
+      }
+      return getAllDoctorList;
+    } catch (e) {
+      debugPrint("Check my error $e");
+    }
   }
 }

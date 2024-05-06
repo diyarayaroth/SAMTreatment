@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:health_care/Services/Shared_pref.dart';
+import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
 import 'package:health_care/screens/Home/View/home_List_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_text_style.dart';
+import 'package:health_care/utils/validation_mixin.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
 import 'package:health_care/widgets/custom/custom_sizebox.dart';
 import 'package:health_care/widgets/primary/primary_textfield.dart';
@@ -33,7 +35,9 @@ class CustomDailog extends StatefulWidget {
   State<CustomDailog> createState() => _CustomDailogState();
 }
 
-class _CustomDailogState extends State<CustomDailog> {
+class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
+  final _formKey = GlobalKey<FormState>();
+  final homeController = Get.put(HomeScreenController());
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -71,21 +75,29 @@ class _CustomDailogState extends State<CustomDailog> {
                   style: AppTextStyle.regulerS14Black,
                 ),
                 SizedBoxH10(),
-                PrimaryTextField(
-                  hintText: "Enter Zip Code",
-                  controller: widget.controller,
+                Form(
+                  key: _formKey,
+                  child: PrimaryTextField(
+                    hintText: "Enter Zip Code",
+                    controller: widget.controller,
+                    validator: zipCodeValidation,
+                    keyboardInputType: TextInputType.number,
+                  ),
                 ),
                 SizedBoxH20(),
                 CustomButton(
-                    text: "Start",
-                    onTap: () {
+                  text: "Start",
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
                       debugPrint(
-                          "Zip code check===> ${widget.controller!.text.toString()}");
-                      Preferances.setString("zipcode", widget.controller!.text);
-                      //Preferances.setString("zipcode", widget.controller!.text);
-                      Get.off(HomeListScreen());
-                    },
-                    borderRadius: 10),
+                          "Zip code check===> ${homeController.zipCodeController.text}");
+                      homeController.getDoctorList(int.parse(
+                          "${homeController.zipCodeController.text.replaceAll('"', '').replaceAll('"', '').toString()}"));
+                      Get.back();
+                    }
+                  },
+                  borderRadius: 10,
+                ),
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:health_care/screens/Home/Model/doctor_list_model.dart';
 import 'package:health_care/screens/Home/View/about_doctor_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
@@ -11,21 +12,30 @@ import 'package:health_care/widgets/custom/custom_button.dart';
 import 'package:health_care/widgets/custom/custom_sizebox.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CustomBookContainer extends StatelessWidget {
-  final String doctorName;
-  final List specialist;
-  final List language;
-  final double distance;
-  final String number;
-  final VoidCallback onPressed;
-  const CustomBookContainer(
-      {super.key,
-      required this.doctorName,
-      required this.specialist,
-      required this.language,
-      required this.distance,
-      required this.number,
-      required this.onPressed});
+class DoctorComponent extends StatelessWidget {
+  final ProviderElement providerElement;
+  const DoctorComponent({
+    super.key,
+    required this.providerElement,
+  });
+  String getImage(String gender) {
+    switch (gender) {
+      case 'Male':
+        return AppAsset.doctorMale;
+      case 'Female':
+        return AppAsset.doctorFemale;
+      case 'Other':
+        return AppAsset.doctor1;
+      case 'unknown':
+        return AppAsset.doctor1;
+      default:
+    }
+    return '';
+  }
+
+  String get fullAddress {
+    return "${providerElement.address.street1}, ${providerElement.address.street2},${providerElement.address.city}, ${providerElement.address.state}, ${providerElement.address.zipcode}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +46,12 @@ class CustomBookContainer extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          Get.to(AboutDoctorScreen());
+          Get.to(
+            () => AboutDoctorScreen(
+              providerElement: providerElement,
+              address: fullAddress,
+            ),
+          );
         },
         child: Container(
           // height: Get.height * 0.198,
@@ -60,33 +75,37 @@ class CustomBookContainer extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Image.asset(AppAsset.doctor1,
-                          fit: BoxFit.cover,
-                          height: Sizes.s100.h,
-                          width: Sizes.s100.w),
-                    ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.asset(
+                            getImage(providerElement.provider.gender),
+                            fit: BoxFit.cover,
+                            height: Sizes.s100.h,
+                            width: Sizes.s100.w)),
                     horizontalSpacing(10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: Sizes.s200.w,
-                          child: appText(doctorName,
-                              style: AppTextStyle.heading18Black
-                                  .copyWith(fontSize: Sizes.s14),
-                              maxLines: 2,
-                              softWrap: true,
-                              isTextOverflow: false),
-                        ),
-                        SizedBoxH2(),
-                        specialist.isNotEmpty
+                        providerElement.provider.name.isNotEmpty
                             ? SizedBox(
                                 width: Sizes.s200.w,
-                                child: appText(specialist.toString(),
+                                child: appText(providerElement.provider.name,
+                                    style: AppTextStyle.heading18Black
+                                        .copyWith(fontSize: Sizes.s14),
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    isTextOverflow: false),
+                              )
+                            : SizedBox.shrink(),
+                        SizedBoxH2(),
+                        providerElement.provider.specialties.isNotEmpty
+                            ? SizedBox(
+                                width: Sizes.s200.w,
+                                child: appText(
+                                    providerElement.provider.specialties
+                                        .toString(),
                                     style: AppTextStyle.heading14Black700
                                         .copyWith(fontSize: Sizes.s12),
                                     maxLines: 2,
@@ -95,37 +114,25 @@ class CustomBookContainer extends StatelessWidget {
                               )
                             : SizedBox.shrink(),
                         SizedBoxH2(),
-                        appText(
-                          language.isNotEmpty ? language.toString() : "",
-                          style: AppTextStyle.regulerS14Black.copyWith(
-                            color: AppColor.searchTextColor,
-                          ),
-                        ),
+                        providerElement.provider.languages.isNotEmpty
+                            ? appText(
+                                providerElement.provider.languages.toString(),
+                                style: AppTextStyle.regulerS14Black.copyWith(
+                                  color: AppColor.searchTextColor,
+                                ),
+                              )
+                            : SizedBox.shrink(),
                         // appText(
-                        //   "9979966965",
+                        //   gender.toString(),
                         //   style: AppTextStyle.regulerS14Black.copyWith(
                         //     color: AppColor.searchTextColor,
                         //   ),
                         // ),
-                        // Row(
-                        //   children: [
-                        //     Row(
-                        //       children: List.generate(
-                        //           5,
-                        //           (index) => Icon(
-                        //                 Icons.star,
-                        //                 color: AppColor.starColor,
-                        //                 size: 20,
-                        //               )),
-                        //     ),
-                        //   ],
-                        // )
                       ],
                     ),
                   ],
                 ),
-                SizedBoxH2(),
-                SizedBoxH2(),
+                verticalSpacing(5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -138,7 +145,7 @@ class CustomBookContainer extends StatelessWidget {
                           style: AppTextStyle.heading14Black700,
                         ),
                         appText(
-                          "(${distance.toStringAsFixed(2)}) ",
+                          "(${providerElement.distance.toStringAsFixed(2)}) ",
                           style: AppTextStyle.reguler12grey,
                         ),
                       ],
@@ -149,7 +156,7 @@ class CustomBookContainer extends StatelessWidget {
                       height: Sizes.s34.h,
                       width: Sizes.s90.w,
                       onTap: () {
-                        launch("tel:$number");
+                        launch("tel:${providerElement.address.phone} ");
                       },
                     ),
                   ],

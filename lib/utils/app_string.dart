@@ -7,7 +7,7 @@ class AppStrings {
   static const String skip = 'Skip';
   static const String next = 'Next';
   static const String previous = 'Previous';
-  static const String getStart = 'Continue with Zocdoc';
+  static const String getStart = 'Continue';
 
   static const String findDoctorOn1 = 'Find Trusted Doctors';
   static const String chooseDoctorOn2 = 'Choose Best Doctors';
@@ -21,7 +21,10 @@ class AppStrings {
   static const String zipCode = 'Zip Code';
   static const String zipCodeOrCity = 'Zip code or City';
   static const String bookAppointment = 'Book Appointment';
+  static const String aboutDoctor = 'About Doctor';
   static const String searchDoctor = 'Search Doctor';
+  static const String insurance = 'Insurance';
+  static const String help = 'Help';
 
   // Dashboard
 

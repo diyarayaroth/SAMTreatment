@@ -1,96 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:health_care/Services/Shared_pref.dart';
 import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
-import 'package:health_care/utils/app_text.dart';
-import 'package:health_care/utils/app_text_style.dart';
+import 'package:health_care/utils/screen_utils.dart';
 import 'package:health_care/widgets/custom/custom_book_container.dart';
+import 'package:health_care/widgets/custom/custom_dailog.dart';
+import 'package:health_care/widgets/custom/custom_shimmer.dart';
 import 'package:health_care/widgets/custom/custom_sizebox.dart';
+import 'package:health_care/widgets/custom/drawer_widget.dart';
 import 'package:health_care/widgets/primary/primary_appbar.dart';
 import 'package:health_care/widgets/primary/primary_padding.dart';
 import 'package:health_care/widgets/primary/primary_textfield.dart';
 
-class HomeListScreen extends StatelessWidget {
-  HomeListScreen({super.key});
+class HomeListScreen extends StatefulWidget {
+  const HomeListScreen({
+    super.key,
+  });
+
+  @override
+  State<HomeListScreen> createState() => _HomeListScreenState();
+}
+
+class _HomeListScreenState extends State<HomeListScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final homeController = Get.put(HomeScreenController());
+  void openDrawer() {
+    _scaffoldKey.currentState?.openDrawer();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColor.whiteColor,
-      drawer: Drawer(),
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        width: ScreenUtil().screenWidth * 0.8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(Sizes.s20.r),
+            bottomRight: Radius.circular(Sizes.s20.r),
+          ),
+        ),
+        child: const DrawerWidget(),
+      ),
       appBar: SecondaryAppBar(
         title: AppStrings.bookAppointment,
         isLeading: true,
         leadingIcon: Icons.menu,
         onBackPressed: () {
-          Drawer();
+          openDrawer();
         },
       ),
-      body: PrimaryPadding(
-        child: Column(
-          children: [
-            SizedBoxH10(),
-            const PrimaryTextField(
-              // controller: homeController.searchController,
-              hintText: AppStrings.searchDoctor,
-              prefix: Icon(Icons.search),
-              // onChanged: (value) {
-              //   homeController.getDoctorList(value);
-              // },
-            ),
-            SizedBoxH10(),
-
-            // Obx(
-            //   () => appText(
-            //     "Results for ${homeController.doctorListResponse.value.providers?.length ?? " "} Doctors",
-            //     style: AppTextStyle.regulerS14Black,
-            //   ),
-            // ),
-            // SizedBoxH20(),
-            Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      homeController.doctorListResponse.value.providers?.length,
-                  padding: EdgeInsets.symmetric(vertical: Sizes.s10.h),
-                  // physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        CustomBookContainer(
-                          doctorName: homeController.doctorListResponse.value
-                                  .providers?[index].provider?.name ??
-                              '',
-                          specialist: homeController.doctorListResponse.value
-                                  .providers?[index].provider?.specialties ??
-                              [0],
-                          language: homeController.doctorListResponse.value
-                                  .providers?[index].provider!.languages ??
-                              [0],
-                          distance: homeController.doctorListResponse.value
-                                  .providers?[index].distance ??
-                              0,
-                          onPressed: () {},
-                          number: homeController.doctorListResponse.value
-                                  .providers?[index].address?.phone ??
-                              '',
+      body: WillPopScope(
+        onWillPop: () async => false,
+        child: PrimaryPadding(
+          child: Column(
+            children: [
+              SizedBoxH10(),
+              PrimaryTextField(
+                controller: homeController.searchController,
+                onChanged: (value) {
+                  debugPrint('on changed value : $value');
+                  homeController.searchQuery(value);
+                },
+                hintText: AppStrings.searchDoctor,
+                prefix: Icon(Icons.search),
+              ),
+              SizedBoxH10(),
+              Expanded(
+                child: Obx(
+                  () => homeController.isLoading.value == true
+                      ? shimmerEffect()
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: homeController.filteredTopics.length,
+                          padding: EdgeInsets.symmetric(vertical: Sizes.s10.h),
+                          itemBuilder: (context, index) {
+                            return DoctorComponent(
+                              providerElement:
+                                  homeController.filteredTopics[index],
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 10);
+                          },
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    );
-                  },
                 ),
               ),
-            ),
 
-            // SizedBoxH20(),
-          ],
+              // SizedBoxH20(),
+            ],
+          ),
         ),
       ),
     );
