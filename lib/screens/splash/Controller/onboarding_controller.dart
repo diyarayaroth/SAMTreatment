@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:health_care/Services/Shared_pref.dart';
 import 'package:health_care/screens/Home/View/home_List_screen.dart';
+import 'package:health_care/screens/Insurance/view/insurance.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
@@ -37,31 +38,22 @@ class OnboardingController extends GetxController {
         )),
   ].obs;
   void onGetStarted() {
-    if (currentPage.value < pages.length - 1) {
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-    } else {
-      Get.to(const HomeListScreen());
-      Preferances.prefSetBool("isUser", true);
-
-      // Preferances.setString("isUser", "1");
-    }
+    Get.to(const InsuranceScreen());
+    Preferances.prefSetBool("isUser", true);
   }
 
-  void onGetSkip() {
-    if (currentPage.value == pages.length - 3) {
-      pageController.jumpToPage(pages.length - 1);
-    } else {
-      pageController.previousPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-    }
-  }
+  // void onGetSkip() {
+  //   if (currentPage.value == pages.length - 3) {
+  //     pageController.jumpToPage(pages.length - 1);
+  //   } else {
+  //     pageController.previousPage(
+  //         duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+  //   }
+  // }
 
-  void onPageChanged(int index) {
-    currentPage.value = index;
-  }
+  // void onPageChanged(int index) {
+  //   currentPage.value = index;
+  // }
 }
 
 class PageData {

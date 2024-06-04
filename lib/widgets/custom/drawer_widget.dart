@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:health_care/screens/Home/View/home_List_screen.dart';
+import 'package:health_care/screens/Insurance/view/insurance.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
@@ -73,8 +77,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         ),
                         ScreenUtil().setVerticalSpacing(20),
                         _DrawerMenuListTile.asset(
+                          title: AppStrings.aboutDoctor,
+                          onTap: () {
+                            //Navigator.pop(context);
+                            Get.to(() => HomeListScreen());
+                          },
+                          child: Image.asset(
+                            AppAsset.frame,
+                            scale: 4,
+                          ),
+                        ),
+                        _DrawerMenuListTile.asset(
                           title: AppStrings.insurance,
-                          onTap: () {},
+                          onTap: () {
+                            //Navigator.pop(context);
+                            Get.to(() => InsuranceScreen());
+                          },
                           child: Image.asset(
                             AppAsset.frame,
                             scale: 4,

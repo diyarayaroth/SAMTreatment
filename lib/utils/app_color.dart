@@ -10,9 +10,11 @@ class AppColor {
   static const Color greyColor = Color(0xff677294);
   static const Color searchbarColor = Color(0xff000000);
   static const Color searchTextColor = Color(0xff797979);
+  static const Color colorF1F1F1 = Color(0xffF1F1F1);
   static const Color blackColor = Color(0xff363636);
   static const Color starColor = Color(0xffFFC700);
   static const Color pendingColor = Color(0xffFD832B);
+  static const Color color00539F = Color(0xff00539F);
 
   static const Color red = Color(0xffF41111);
   static const Color darkGrey = Color(0xff808080);

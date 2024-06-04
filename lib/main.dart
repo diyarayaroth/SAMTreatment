@@ -6,6 +6,7 @@ import 'package:health_care/utils/screen_utils.dart';
 import 'package:health_care/utils/theme_utils.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -19,25 +20,34 @@ class MyApp extends StatelessWidget {
 
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-      child: GetMaterialApp(
-        title: 'Health Care',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeUtils.lightTheme,
-        home: const SplashScreen(),
-        builder: (context, child) {
-          return ScrollConfiguration(
-            behavior: const _ScrollBehaviorModified(),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                ScreenUtil.init(constraints,
-                    designSize:
-                        Size(constraints.maxWidth, constraints.maxHeight));
-                child = botToastBuilder(context, child);
-                return child ?? const SizedBox.shrink();
-              },
-            ),
-          );
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            FocusManager.instance.primaryFocus!.unfocus();
+          }
         },
+        child: GetMaterialApp(
+          title: 'Health Care',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeUtils.lightTheme,
+          home: const SplashScreen(),
+          builder: (context, child) {
+            return ScrollConfiguration(
+              behavior: const _ScrollBehaviorModified(),
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  ScreenUtil.init(constraints,
+                      designSize:
+                          Size(constraints.maxWidth, constraints.maxHeight));
+                  child = botToastBuilder(context, child);
+                  return child ?? const SizedBox.shrink();
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
+import 'package:health_care/screens/Insurance/controller/insurance_controller.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_text_style.dart';
 import 'package:health_care/utils/helper.dart';
@@ -41,6 +42,7 @@ class CustomDailog extends StatefulWidget {
 class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
   final _formKey = GlobalKey<FormState>();
   final homeController = Get.put(HomeScreenController());
+  final insuranceController = Get.put(InsuranceController());
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -110,12 +112,18 @@ class _CustomDailogState extends State<CustomDailog> with ValidationMixin {
                   text: "Start",
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
+                      debugPrint(
+                          "Zip code check 1===> ${widget.controller!.text}");
+                      debugPrint(
+                          "Zip code check 2===> ${homeController.zipCodeController.text}");
                       homeController.filteredTopics.clear();
                       debugPrint(
-                          "Zip code check===> ${homeController.zipCodeController.text}");
+                          "Zip code check 3===> ${homeController.zipCodeController.text}");
 
                       homeController.getDoctorList(int.parse(
                           "${homeController.zipCodeController.text.replaceAll('"', '').replaceAll('"', '').toString()}"));
+                      insuranceController.zipCodeController.text =
+                          widget.controller!.text;
                       Get.back();
                     }
                   },

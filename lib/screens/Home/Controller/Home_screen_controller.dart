@@ -20,21 +20,21 @@ class HomeScreenController extends GetxController {
 
   @override
   void onInit() {
-    _showDialog();
+    // _showDialog();
     filteredTopics.addAll(getAllDoctorList);
     debugPrint("Check my doctor list 21 ${filteredTopics.length}");
 
     super.onInit();
   }
 
-  _showDialog() async {
-    await Future.delayed(Duration(milliseconds: 1));
-    Get.dialog(CustomDailog(
-      isBack: false,
-      title: 'Add Zipcode',
-      controller: zipCodeController,
-    ));
-  }
+  // _showDialog() async {
+  //   await Future.delayed(Duration(milliseconds: 1));
+  //   Get.dialog(CustomDailog(
+  //     isBack: false,
+  //     title: 'Add Zipcode',
+  //     controller: zipCodeController,
+  //   ));
+  // }
 
   void searchQuery(String value) {
     debugPrint('search Query Function called : $value');

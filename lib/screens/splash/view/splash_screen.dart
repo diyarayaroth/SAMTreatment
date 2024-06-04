@@ -4,6 +4,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:health_care/Services/Shared_pref.dart';
 import 'package:health_care/screens/Home/View/home_List_screen.dart';
+import 'package:health_care/screens/Insurance/view/insurance.dart';
 import 'package:health_care/screens/splash/view/onboarding_screen1.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   getStarted() {
     Future.delayed(const Duration(seconds: 3), () {
       if (user.value == true) {
-        Get.to(const HomeListScreen());
+        Get.to(const InsuranceScreen());
       } else {
         Get.to(OnboardingScreen());
       }

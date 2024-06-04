@@ -23,7 +23,10 @@ class AppStrings {
   static const String bookAppointment = 'Doctor Appointment';
   static const String aboutDoctor = 'About Doctor';
   static const String searchDoctor = 'Search Doctor';
+  static const String searchPlaces = 'Search Places';
   static const String insurance = 'Insurance';
+  static const String searchForTreatment = 'search for treatment';
+  static const String treatment = 'Treatment';
   static const String help = 'Help';
   static const String male = 'Male';
   static const String female = 'Female';

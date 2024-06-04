@@ -20,7 +20,7 @@ class SecondaryAppBar extends StatefulWidget implements PreferredSizeWidget {
     Key? key,
     this.title,
     this.action,
-    this.isLeading = true,
+    this.isLeading,
     this.elevation,
     this.leading,
     this.leadingIcon,
@@ -41,34 +41,37 @@ class _SecondaryAppBarState extends State<SecondaryAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: widget.backgroundColor ?? Colors.white,
-        elevation: widget.elevation,
-        // centerTitle: true,
-        title: appText(
-          widget.title ?? "",
-          style: AppTextStyle.appBarTextTitle
-              .copyWith(color: widget.textColor ?? AppColor.blackColor),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Center(child: widget.action),
-          )
-        ],
-        leading: widget.isLeading == true
-            ? IconButton(
-                icon: Icon(
-                  widget.leadingIcon ?? Icons.arrow_back_ios_outlined,
-                  size: Sizes.s22.h,
-                  color: widget.textColor ?? AppColor.blackColor,
-                ),
-                onPressed: widget.onBackPressed ??
-                    () {
-                      Navigator.pop(context);
-                    },
-              )
-            : const SizedBox.shrink());
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: widget.backgroundColor ?? Colors.white,
+      elevation: widget.elevation,
+      automaticallyImplyLeading: widget.isLeading ?? true,
+      centerTitle: false,
+      title: appText(
+        widget.title ?? "",
+        style: AppTextStyle.appBarTextTitle
+            .copyWith(color: widget.textColor ?? AppColor.blackColor),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: Center(child: widget.action),
+        )
+      ],
+
+      // leading: widget.isLeading == true
+      //     ? IconButton(
+      //         icon: Icon(
+      //           widget.leadingIcon ?? Icons.arrow_back_ios_outlined,
+      //           size: Sizes.s22.h,
+      //           color: widget.textColor ?? AppColor.blackColor,
+      //         ),
+      //         onPressed: widget.onBackPressed ??
+      //             () {
+      //               Navigator.pop(context);
+      //             },
+      //       )
+      //     : const SizedBox()
+    );
   }
 }
 
