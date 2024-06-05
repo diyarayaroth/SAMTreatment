@@ -1,24 +1,8 @@
-// import 'package:flutter/material.dart';
-
-// class InsuranceScreen extends StatefulWidget {
-//   const InsuranceScreen({super.key});
-
-//   @override
-//   State<InsuranceScreen> createState() => _InsuranceScreenState();
-// }
-
-// class _InsuranceScreenState extends State<InsuranceScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
-import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
 import 'package:health_care/screens/Insurance/controller/insurance_controller.dart';
@@ -92,6 +76,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
           },
         ),
       ),
+      // ignore: deprecated_member_use
       body: WillPopScope(
         onWillPop: () async => false,
         child: PrimaryPadding(
@@ -104,7 +89,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                   child: Column(
                     children: [
                       PrimaryTextField(
@@ -117,10 +103,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                             insuranceController.isSearching.value = true;
                           }
                         },
-                        hintText:
-                            insuranceController.zipCodeController.text.isEmpty
-                                ? 'Enter Zip Code Or City'
-                                : insuranceController.zipCodeController.text,
+                        hintText: 'Enter Zip Code Or City',
                         prefix: const Icon(Icons.search),
                         color: Colors.white,
                       ),
@@ -183,7 +166,18 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                 borderRadius: 5,
                                 text: "Search",
                                 onTap: () {
-                                  insuranceController.getInsuranceList();
+                                  insuranceController.isFirst.value = false;
+                                  insuranceController
+                                          .zipCodeController.text.isNotEmpty
+                                      ? insuranceController.onSearchFilter()
+                                      : Fluttertoast.showToast(
+                                          msg: "Enter Zip Code or City",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
                                 })
                           ],
                         ),
@@ -207,57 +201,45 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                             itemBuilder: (context, index) {
                               final prediction =
                                   searchController.predictions[index];
-                              return Column(
-                                children: [
-                                  ListTile(
-                                    title: Text(prediction.description ?? ""),
-                                    tileColor: AppColor.colorF1F1F1,
-                                    leading:
-                                        const Icon(Icons.location_on, size: 20),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    onTap: () async {
-                                      try {
-                                        PlacesDetailsResponse detail =
-                                            await searchController
-                                                .getPlaceDetails(
-                                                    prediction.placeId ?? "");
-                                        final lat = detail
-                                            .result.geometry?.location.lat;
-                                        final lng = detail
-                                            .result.geometry?.location.lng;
-                                        final postalCode =
-                                            await searchController
-                                                .getPostalCode(lat!, lng!);
+                              return ListTile(
+                                title: Text(prediction.description ?? ""),
+                                tileColor: AppColor.colorF1F1F1,
+                                leading:
+                                    const Icon(Icons.location_on, size: 20),
+                                onTap: () async {
+                                  try {
+                                    PlacesDetailsResponse detail =
+                                        await searchController.getPlaceDetails(
+                                            prediction.placeId ?? "");
+                                    final lat =
+                                        detail.result.geometry?.location.lat;
+                                    final lng =
+                                        detail.result.geometry?.location.lng;
+                                    final postalCode = await searchController
+                                        .getPostalCode(lat!, lng!);
 
-                                        insuranceController
-                                                .zipCodeController.text =
-                                            searchController.address.value;
-                                        insuranceController.zipCode.value =
-                                            postalCode;
-                                        insuranceController.latlong.value =
-                                            "$lat,$lng";
+                                    insuranceController.zipCodeController.text =
+                                        searchController.address.value;
+                                    insuranceController.zipCode.value =
+                                        postalCode;
+                                    insuranceController.latlong.value =
+                                        "$lat,$lng";
 
-                                        debugPrint(
-                                            "Check my postal code ${insuranceController.zipCode.value}");
-                                        insuranceController.isSearching.value =
-                                            false;
+                                    debugPrint(
+                                        "Check my postal code ${insuranceController.zipCode.value}");
+                                    insuranceController.isSearching.value =
+                                        false;
 
-                                        // here i want to close keyboard
-                                        FocusScope.of(context).unfocus();
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  'Failed to fetch place details')),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  verticalSpacing(5)
-                                ],
+                                    // here i want to close keyboard
+                                    FocusScope.of(context).unfocus();
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Failed to fetch place details')),
+                                    );
+                                  }
+                                },
                               );
                             },
                           )),
@@ -274,6 +256,10 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: ExpansionTile(
+                          onExpansionChanged: (value) {
+                            insuranceController.isFacilityTab.value = value;
+                          },
+                          iconColor: AppColor.blackColor,
                           title: Row(
                             children: [
                               const Icon(
@@ -306,22 +292,37 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 CustomButton(
-                                  width: context.width * 0.3,
-                                  height: context.height * 0.05,
+                                  width: context.width * 0.25,
+                                  height: context.height * 0.04,
                                   borderRadius: 5,
                                   text: 'Search',
-                                  onTap: () {},
+                                  onTap: () {
+                                    insuranceController.isFirst.value = false;
+                                    insuranceController
+                                            .zipCodeController.text.isNotEmpty
+                                        ? insuranceController.onSearchFilter()
+                                        : Fluttertoast.showToast(
+                                            msg: "Enter Zip Code or City",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.black,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                  },
                                 ),
                                 CustomButton(
-                                  width: context.width * 0.3,
-                                  height: context.height * 0.05,
+                                  width: context.width * 0.25,
+                                  height: context.height * 0.04,
                                   borderRadius: 5,
                                   text: 'More Filters',
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.to(() => MyTabScreen());
+                                  },
                                 ),
                               ],
                             ),
-                            verticalSpacing(5),
+                            verticalSpacing(10),
                           ],
                         ),
                       ),
@@ -334,21 +335,22 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Wrap(
-                            spacing: 5,
+                            spacing: 2,
                             children: [
+                              insuranceController.dropdownValue.value.isNotEmpty
+                                  ? Chip(
+                                      label: Text(
+                                        insuranceController.dropdownValue.value,
+                                        style: AppTextStyle.regulerS14Black
+                                            .copyWith(
+                                                color: AppColor.blackColor),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
                               ...insuranceController.filterChipList.map(
-                                (e) => e.isChecked == true
+                                (e) => e.isChecked.isTrue
                                     ? Chip(
                                         label: Text(e.name),
-                                        onDeleted: () {
-                                          insuranceController
-                                              .filterChipList[
-                                                  insuranceController
-                                                      .filterChipList
-                                                      .indexOf(e)]
-                                              .isChecked
-                                              .value = false;
-                                        },
                                       )
                                     : const SizedBox.shrink(),
                               ),
@@ -357,12 +359,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                           element.isChecked.value == true)
                                   ? GestureDetector(
                                       onTap: () {
-                                        insuranceController.filterChipList
-                                            .forEach(
-                                          (element) {
-                                            element.isChecked.value = false;
-                                          },
-                                        );
+                                        for (var element in insuranceController
+                                            .filterChipList) {
+                                          element.isChecked.value = false;
+                                          insuranceController.onSearchFilter();
+                                        }
                                       },
                                       child: Chip(
                                         label: Text(
@@ -380,12 +381,16 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                         ),
                       ),
                     ),
+                    verticalSpacing(10),
+                    // shimmerEffect()
                     Expanded(
                       child: Obx(
                         () => insuranceController.isLoading.value == true
                             ? shimmerEffect()
                             : insuranceController.getInsListRes.isEmpty
-                                ? noData()
+                                ? insuranceController.isFirst.value
+                                    ? noData()
+                                    : noDataSearch()
                                 : ListView.separated(
                                     shrinkWrap: true,
                                     physics:
@@ -398,6 +403,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                       return InsuranceComponent(
                                         providerElement: insuranceController
                                             .getInsListRes[index],
+                                        facilityType:
+                                            '${insuranceController.getInsListRes[index].typeFacility}',
                                       );
                                     },
                                     separatorBuilder:
@@ -428,7 +435,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
               scale: 3,
             ),
             horizontalSpacing(10),
-            Text(
+            const Text(
               "instructions",
               style: AppTextStyle.appBarTextTitle,
             ),
@@ -437,6 +444,119 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         verticalSpacing(15),
         const Text(
             "Find confidential and anonymous resource for locating treatment facilities for mental and substance use disorders in the United States and its territories")
+      ],
+    );
+  }
+
+  Widget noDataSearch() {
+    return Column(
+      children: [
+        verticalSpacing(10),
+        Center(
+          child: Text(
+            "No results found.",
+            style: AppTextStyle.appBarTextTitle.copyWith(
+              color: AppColor.red,
+            ),
+          ),
+        ),
+        verticalSpacing(20),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Search Tips:",
+              style: AppTextStyle.appBarTextTitle.copyWith(
+                color: AppColor.red,
+              ),
+            ),
+            verticalSpacing(10),
+            Row(
+              children: [
+                const Icon(
+                  Icons.circle,
+                  color: AppColor.blackColor,
+                  size: 10,
+                ),
+                horizontalSpacing(10),
+                const Text(
+                  "Expand your search range",
+                  style: AppTextStyle.regulerS14Black,
+                ),
+              ],
+            ),
+            verticalSpacing(10),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.circle,
+                    color: AppColor.lightGrey,
+                    size: 10,
+                  ),
+                  horizontalSpacing(10),
+                  Text(
+                    "Increase the Distance option value",
+                    style: AppTextStyle.reguler12grey.copyWith(
+                      color: AppColor.blackColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            verticalSpacing(10),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.circle_sharp,
+                    color: AppColor.lightGrey,
+                    size: 10,
+                  ),
+                  horizontalSpacing(10),
+                  Text(
+                    "Deselect the Distance, County or State constraint",
+                    style: AppTextStyle.reguler12grey.copyWith(
+                      color: AppColor.blackColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            verticalSpacing(10),
+            Row(
+              children: [
+                const Icon(
+                  Icons.circle,
+                  color: AppColor.blackColor,
+                  size: 10,
+                ),
+                horizontalSpacing(10),
+                const Text(
+                  "Include more facility types",
+                  style: AppTextStyle.regulerS14Black,
+                ),
+              ],
+            ),
+            verticalSpacing(10),
+            Row(
+              children: [
+                const Icon(
+                  Icons.circle,
+                  color: AppColor.blackColor,
+                  size: 10,
+                ),
+                horizontalSpacing(10),
+                const Text(
+                  "Reduce the number of selected filter types",
+                  style: AppTextStyle.regulerS14Black,
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }

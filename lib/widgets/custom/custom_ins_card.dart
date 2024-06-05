@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/screens/Home/Model/doctor_list_model.dart';
 import 'package:health_care/screens/Insurance/model/insurance_model.dart';
 import 'package:health_care/screens/Insurance/view/insurance_about_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
+import 'package:health_care/utils/app_string.dart';
 import 'package:health_care/utils/app_text_style.dart';
 import 'package:health_care/utils/helper.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
@@ -12,9 +12,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class InsuranceComponent extends StatelessWidget {
   final Rows providerElement;
+  final String facilityType;
   const InsuranceComponent({
     super.key,
     required this.providerElement,
+    required this.facilityType,
   });
 
   @override
@@ -51,17 +53,20 @@ class InsuranceComponent extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
-                  CustomButton(
-                      bgColor: AppColor.whiteColor,
-                      borderRadius: 5,
-                      height: 30,
-                      width: 100,
-                      text: "More Services",
-                      txtColor: AppColor.blackColor,
-                      onTap: () {
-                        Get.to(() => InsuranceAboutScreen(
-                            providerElement: providerElement));
-                      })
+                  Visibility(
+                    visible: providerElement.services?.isNotEmpty ?? false,
+                    child: CustomButton(
+                        bgColor: AppColor.whiteColor,
+                        borderRadius: 5,
+                        height: 30,
+                        width: 100,
+                        text: "More Services",
+                        txtColor: AppColor.blackColor,
+                        onTap: () {
+                          Get.to(() => InsuranceAboutScreen(
+                              providerElement: providerElement));
+                        }),
+                  )
                 ],
               ),
             ),
@@ -79,8 +84,15 @@ class InsuranceComponent extends StatelessWidget {
                       children: [
                         const Icon(Icons.call, color: Colors.black, size: 16),
                         horizontalSpacing(5),
-                        Text(" ${providerElement.phone}",
-                            style: AppTextStyle.regulerS14Black),
+                        InkWell(
+                          onTap: () {
+                            // ignore: deprecated_member_use
+                            launch("tel:${providerElement.phone}");
+                          },
+                          child: Text(
+                              " ${providerElement.phone?.substring(0, 12)}",
+                              style: AppTextStyle.regulerS14Black),
+                        ),
                       ],
                     ),
                     Row(
@@ -95,33 +107,32 @@ class InsuranceComponent extends StatelessWidget {
                   ],
                 ),
                 verticalSpacing(10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.language,
-                            color: Colors.black, size: 16),
-                        horizontalSpacing(5),
-                        InkWell(
-                          onTap: () {
-                            launch("${providerElement.website}");
-                          },
-                          child: SizedBox(
-                            width: context.width * 0.7,
-                            child: Text(
-                              " ${providerElement.website}",
-                              style: AppTextStyle.regulerS14Black.copyWith(
-                                color: Colors.blue,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                Visibility(
+                  visible: providerElement.website?.isNotEmpty ?? false,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.language, color: Colors.black, size: 16),
+                      horizontalSpacing(5),
+                      InkWell(
+                        onTap: () {
+                          // ignore: deprecated_member_use
+                          launch("${providerElement.website}");
+                        },
+                        child: SizedBox(
+                          width: context.width * 0.7,
+                          child: Text(
+                            " ${providerElement.website}",
+                            style: AppTextStyle.regulerS14Black.copyWith(
+                              color: Colors.blue,
                             ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
                 verticalSpacing(10),
                 Row(
@@ -137,7 +148,7 @@ class InsuranceComponent extends StatelessWidget {
                           width: context.width * 0.7,
                           child: Text(
                             "${providerElement.street1}, ${providerElement.city}, ${providerElement.state}, ${providerElement.zip}",
-                            style: TextStyle(color: Colors.black),
+                            style: AppTextStyle.regulerS14Black,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
@@ -147,28 +158,37 @@ class InsuranceComponent extends StatelessWidget {
                   ],
                 ),
                 verticalSpacing(10),
-                Text(
-                  "Services",
-                  style: AppTextStyle.appBarTextTitle.copyWith(
-                    fontSize: 16,
-                  ),
-                ),
-                verticalSpacing(10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(AppAsset.rightIcon, height: 15, width: 15),
-                    horizontalSpacing(5),
-                    SizedBox(
-                      width: context.width * 0.7,
-                      child: Text(
-                        "${providerElement.services?.first.f3}",
-                        style: AppTextStyle.regulerS14Black,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 5,
+                Visibility(
+                  visible: providerElement.services?.isNotEmpty ?? false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Services",
+                        style: AppTextStyle.appBarTextTitle.copyWith(
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  ],
+                      verticalSpacing(10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(AppAsset.rightIcon,
+                              height: 15, width: 15),
+                          horizontalSpacing(5),
+                          SizedBox(
+                            width: context.width * 0.7,
+                            child: Text(
+                              "${providerElement.services?.first.f3}",
+                              style: AppTextStyle.regulerS14Black,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 verticalSpacing(10),
                 Row(
@@ -176,18 +196,14 @@ class InsuranceComponent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Source: ",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    SizedBox(
-                      width: context.width * 0.6,
-                      child: Text(
-                        "National Substance Use and Mental Health Services Survey(N-SUMHSS)",
-                        style: TextStyle(color: Colors.blue),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
+                      "${AppStrings.source}: ",
+                      style: AppTextStyle.regulerS14Black.copyWith(
+                        color: Colors.black,
                       ),
                     ),
+                    SizedBox(
+                        width: context.width * 0.6,
+                        child: facilityTypeData(facilityType)),
                   ],
                 ),
               ],
@@ -196,5 +212,57 @@ class InsuranceComponent extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+facilityTypeData(String ft) {
+  switch (ft) {
+    case ("MH" || "SA"):
+      return InkWell(
+        onTap: () {
+          // ignore: deprecated_member_use
+          launch("https://info.nsumhss.samhsa.gov/");
+        },
+        child: Text(
+          AppStrings.mhText,
+          style: AppTextStyle.regulerS14Black.copyWith(
+            color: Colors.blue,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 3,
+        ),
+      );
+    case "HRSA":
+      return InkWell(
+        onTap: () {
+          // ignore: deprecated_member_use
+          launch("https://data.hrsa.gov/");
+        },
+        child: Text(
+          AppStrings.hRSAText,
+          style: AppTextStyle.regulerS14Black.copyWith(
+            color: Colors.blue,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 3,
+        ),
+      );
+    case ("BUPREN" || "OTP"):
+      return InkWell(
+        onTap: () {
+          // ignore: deprecated_member_use
+          launch("https://dpt2.samhsa.gov/treatment/directory.aspx");
+        },
+        child: Text(
+          AppStrings.bUPRENText,
+          style: AppTextStyle.regulerS14Black.copyWith(
+            color: Colors.blue,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 3,
+        ),
+      );
+    default:
+      return null;
   }
 }

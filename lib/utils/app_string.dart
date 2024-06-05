@@ -31,6 +31,12 @@ class AppStrings {
   static const String male = 'Male';
   static const String female = 'Female';
   static const String Other = 'Other';
+  static const String source = 'Source';
+  static const String mhText =
+      'National Substance Use and Mental Health Services Survey (N-SUMHSS)';
+  static const String hRSAText = 'HRSA Data Warehouse';
+  static const String bUPRENText =
+      'Center for Substance Abuse Treatment (CSAT)';
   static const String unknown = 'unknown';
 
   // Dashboard

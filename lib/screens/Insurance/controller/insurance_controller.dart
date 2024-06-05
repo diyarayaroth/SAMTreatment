@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/state_manager.dart';
-import 'package:health_care/screens/Insurance/view/eocoding_service.dart';
 import 'dart:convert';
 import 'package:health_care/Api/network.dart';
 import 'package:health_care/screens/Insurance/model/insurance_model.dart';
@@ -63,62 +61,222 @@ class InsuranceController extends GetxController {
   ];
 
   RxBool isSearching = false.obs;
-
+  RxBool isFacilityTab = false.obs;
   RxBool isLoading = false.obs;
   RxBool isMentalHealth = false.obs;
   RxBool isSubstanceUse = false.obs;
-  // RxBool isHRSA = false.obs;
-  // RxBool isOTP = false.obs;
-  // RxBool isBupren = false.obs;
-  RxString _latitude = ''.obs;
-  RxString _longitude = ''.obs;
+  RxBool isFirst = true.obs;
 
   var dropdownValue1 = [].obs;
   var dropdownValue2 = [].obs;
 
-  // RxBool isSearching = false.obs;
+  RxDouble distanceInMeters = 0.0.obs;
 
-  final _geocodingService = GeocodingService();
+  RxString includeBupren = "0".obs;
+  RxString includeHRSA = ''.obs;
+  RxString includeOTP = ''.obs;
+  RxString sType = ''.obs;
+  var sCodeList = [].obs;
 
   @override
   void onInit() {
     dropdownValue = distanceList.first.obs;
     filterChipList
         .addAll([...facilities, ...populerFilter, ...paymentAcceptedCheckList]);
-    // getInsuranceList();
-
     super.onInit();
   }
 
-  // _showDialog() async {
-  //   await Future.delayed(Duration(milliseconds: 1));
-  //   Get.dialog(CustomDailog(
-  //     isBack: false,
-  //     title: 'Add Zipcode',
-  //     controller: zipCodeController,
-  //   ));
-  // }
+  void facilityFilter() {
+    bool isSubstanceUseSelected = false;
+    bool isMentalHealthSelected = false;
 
-  getInsuranceList() async {
-    isLoading.value = true;
+    for (var facility in filterChipList) {
+      if (facility.isChecked.value) {
+        if (facility.name == 'Substance Use') {
+          isSubstanceUseSelected = true;
+        } else if (facility.name == 'Mental Health') {
+          isMentalHealthSelected = true;
+        }
+      }
+    }
+    switch (isSubstanceUseSelected) {
+      case true:
+        switch (isMentalHealthSelected) {
+          case true:
+            sType.value = "BOTH";
+            break;
+          case false:
+            sType.value = "SA";
+            break;
+        }
+        break;
+      case false:
+        switch (isMentalHealthSelected) {
+          case true:
+            sType.value = "MH";
+            break;
+          case false:
+            sType.value = "BOTH";
+            break;
+        }
+        break;
+    }
+
+    includeBupren.value = filterChipList.any((facility) =>
+            facility.name == 'Buprenorphine Practitioners' &&
+            facility.isChecked.value)
+        ? '1'
+        : '0';
+    includeHRSA.value = filterChipList.any((facility) =>
+            facility.name == 'Health Care Center' && facility.isChecked.value)
+        ? '1'
+        : '0';
+    includeOTP.value = filterChipList.any((facility) =>
+            facility.name == 'Opioid Treatment Programs' &&
+            facility.isChecked.value)
+        ? '1'
+        : '0';
+  }
+
+  void popularFilter() {
+    sCodeList.clear();
+// IHS/Tribal/Urban =ITU
+// Medicare =MC
+// Medicaid =MD
+// Federal military insurance =MI
+// Private health insurance =PI
+// Cash or self-payment =SF
+// State-financed health insurance plan other than Medicaid=SI
+
+    List<String> facilityNames = [
+      'Veterans Affairs',
+      'Medicaid',
+      'Adults',
+      'Outpatient',
+      'Residential/24-hour residential',
+      'Telemedicine/telehealth therapy',
+      'IHS/Tribal/Urban (ITU) funds',
+      'Medicare',
+      'Federal military insurance (e.g., TRICARE)',
+      'Private health insurance',
+      'Cash or self-payment',
+      'State-financed health insurance plan other than Medicaid',
+    ];
+
+    for (var facilityName in facilityNames) {
+      if (filterChipList.any((facility) =>
+          facility.name == facilityName && facility.isChecked.value)) {
+        switch (facilityName) {
+          case 'Veterans Affairs':
+            if (!sCodeList.contains('VAMC')) {
+              sCodeList.add('VAMC');
+            }
+            break;
+          case 'Medicaid':
+            if (!sCodeList.contains('MD')) {
+              sCodeList.add('MD');
+            }
+            break;
+          case 'Adults':
+            if (!sCodeList.contains('ADLT')) {
+              sCodeList.add('ADLT');
+            }
+            break;
+          case 'Outpatient':
+            if (!sCodeList.contains('OP')) {
+              sCodeList.add('OP');
+            }
+            break;
+          case 'Residential/24-hour residential':
+            if (!sCodeList.contains('RES')) {
+              sCodeList.add('RES');
+            }
+            break;
+          case 'Telemedicine/telehealth therapy':
+            if (!sCodeList.contains('TELE')) {
+              sCodeList.add('TELE');
+            }
+            break;
+          case 'IHS/Tribal/Urban (ITU) funds':
+            if (!sCodeList.contains('ITU')) {
+              sCodeList.add('ITU');
+            }
+            break;
+          case 'Medicare':
+            if (!sCodeList.contains('MC')) {
+              sCodeList.add('MC');
+            }
+            break;
+          case 'Federal military insurance (e.g., TRICARE)':
+            if (!sCodeList.contains('MI')) {
+              sCodeList.add('MI');
+            }
+            break;
+          case 'Private health insurance':
+            if (!sCodeList.contains('PI')) {
+              sCodeList.add('PI');
+            }
+            break;
+          case 'Cash or self-payment':
+            if (!sCodeList.contains('SF')) {
+              sCodeList.add('SF');
+            }
+            break;
+          case 'State-financed health insurance plan other than Medicaid':
+            if (!sCodeList.contains('SI')) {
+              sCodeList.add('SI');
+            }
+            break;
+        }
+      }
+    }
+  }
+
+  void onSearchFilter() {
+    facilityFilter();
+    popularFilter();
     String? distance = dropdownValue.value.replaceAll(' miles', '');
-    double distanceInMeters = double.parse(distance) * 1609.34;
-    String? apiUrl =
+    distanceInMeters.value = double.parse(distance) * 1609.34;
 
-        //"https://marketplace.api.healthcare.gov/api/v1/providers/search?apikey=i5809cXUIhvlCabIGOOyWD42c4MW1Wyv&year=2024&q=doctor&zipcode=$zip&type=Individual";
-        "https://findtreatment.gov/locator/listing";
+    BodyModel bodyValue = BodyModel(
+      sType: sType.value,
+      sAddr: latlong.value,
+      sCodes: sCodeList.isNotEmpty ? sCodeList.join(',') : "",
+      includeBupren: includeBupren.value,
+      includeHRSA: includeHRSA.value,
+      includeOTP: includeOTP.value,
+      limitType: "2",
+      limitValue: distanceInMeters.value.toString(),
+      pageSize: "10",
+      page: "1",
+      sort: "0",
+    );
+
+    getInsuranceList(bodyValue);
+  }
+
+  getInsuranceList(
+    BodyModel bodyValue,
+  ) async {
+    isLoading.value = true;
+    // String? distance = dropdownValue.value.replaceAll(' miles', '');
+    // double distanceInMeters = double.parse(distance) * 1609.34;
+    String? apiUrl = "https://findtreatment.gov/locator/listing";
     debugPrint("Check my api url $apiUrl}");
     var body = {
-      "sType": "BOTH",
-      //"sAddr": "37.5042267,-121.9643745",
-      "sAddr": latlong.value,
+      "sType": bodyValue.sType,
+      "sAddr": bodyValue.sAddr,
+      "sCodes": bodyValue.sCodes,
+      "includeBupren": bodyValue.includeBupren,
+      "includeHRSA": bodyValue.includeHRSA,
+      "includeOTP": bodyValue.includeOTP,
       "limitType": "2",
-      "limitValue": distanceInMeters.toString(),
-      "pageSize": "10",
+      "limitValue": bodyValue.limitValue,
+      "pageSize": "1000",
       "page": "1",
       "sort": "0",
     };
-    debugPrint("Check my body $body");
+    debugPrint("Check my body ${jsonEncode(body)}");
     var headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
@@ -126,7 +284,7 @@ class InsuranceController extends GetxController {
     try {
       var result = await NetworkAPICall().post(
         apiUrl,
-        body,
+        body, // Rename the local variable 'body' to 'requestBody'
         headers: headers,
       );
       if (result != null) {
@@ -150,4 +308,32 @@ class Facility {
   final RxBool isChecked;
 
   Facility({required this.name, required this.isChecked});
+}
+
+class BodyModel {
+  final String? sType;
+  final String? sAddr;
+  final String? sCodes;
+  final String? includeBupren;
+  final String? includeHRSA;
+  final String? includeOTP;
+  final String? limitType;
+  final String? limitValue;
+  final String? pageSize;
+  final String? page;
+  final String? sort;
+
+  BodyModel({
+    this.sType,
+    this.sAddr,
+    this.sCodes,
+    this.includeBupren,
+    this.includeHRSA,
+    this.includeOTP,
+    this.limitType,
+    this.limitValue,
+    this.pageSize,
+    this.page,
+    this.sort,
+  });
 }

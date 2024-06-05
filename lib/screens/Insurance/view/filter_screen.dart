@@ -1,14 +1,18 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:health_care/screens/Insurance/controller/insurance_controller.dart';
+import 'package:health_care/screens/Insurance/view/insurance.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
 
 class MyTabScreen extends StatefulWidget {
+  const MyTabScreen({super.key});
+
   @override
   _MyTabScreenState createState() => _MyTabScreenState();
 }
@@ -144,11 +148,14 @@ class _MyTabScreenState extends State<MyTabScreen>
                 child: CustomButton(
                     txtColor: AppColor.whiteColor,
                     bgColor: AppColor.primaryColor,
-                    text: "Save",
+                    text: "Apply Filter",
                     borderRadius: 0,
                     height: Sizes.s50.h,
                     width: Sizes.s330.w,
-                    onTap: () {}),
+                    onTap: () {
+                      Get.off(() => const InsuranceScreen());
+                      insuranceController.onSearchFilter();
+                    }),
               ),
             ],
           )
@@ -190,7 +197,7 @@ class FacilityTab extends StatelessWidget {
               children: insuranceController.facilities.map((facility) {
                 return SizedBox(
                   height:
-                      status == true ? Get.height * 0.06 : Get.height * 0.04,
+                      status == true ? Get.height * 0.06 : Get.height * 0.03,
                   child: Row(
                     children: [
                       Checkbox(
@@ -244,7 +251,7 @@ class PopularFilterTab extends StatelessWidget {
               children: insuranceController.populerFilter.map((facility) {
                 return SizedBox(
                   height:
-                      status == true ? Get.height * 0.06 : Get.height * 0.04,
+                      status == true ? Get.height * 0.06 : Get.height * 0.03,
                   child: Row(
                     children: [
                       Checkbox(
