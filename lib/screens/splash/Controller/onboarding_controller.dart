@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:health_care/Services/Shared_pref.dart';
-import 'package:health_care/screens/Home/View/home_List_screen.dart';
-import 'package:health_care/screens/Insurance/view/insurance.dart';
+import 'package:health_care/screens/Home/view/home.dart';
 import 'package:health_care/utils/app_asset.dart';
-import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
-import 'package:health_care/widgets/custom/custom_button.dart';
-import 'package:health_care/widgets/custom/custom_dailog.dart';
 
 class OnboardingController extends GetxController {
   final PageController pageController = PageController();
@@ -41,22 +37,10 @@ class OnboardingController extends GetxController {
     Get.to(const InsuranceScreen());
     Preferances.prefSetBool("isUser", true);
   }
-
-  // void onGetSkip() {
-  //   if (currentPage.value == pages.length - 3) {
-  //     pageController.jumpToPage(pages.length - 1);
-  //   } else {
-  //     pageController.previousPage(
-  //         duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-  //   }
-  // }
-
-  // void onPageChanged(int index) {
-  //   currentPage.value = index;
-  // }
 }
 
 class PageData {
+  // ignore: prefer_typing_uninitialized_variables
   final padding;
   final String title;
   final String subtitle;

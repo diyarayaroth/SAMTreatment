@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/screens/Insurance/model/insurance_model.dart';
-import 'package:health_care/screens/Insurance/view/insurance_about_screen.dart';
+import 'package:health_care/screens/Home/model/insurance_model.dart';
+import 'package:health_care/screens/Home/view/about_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_string.dart';

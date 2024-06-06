@@ -1,23 +1,25 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/screens/Insurance/controller/insurance_controller.dart';
-import 'package:health_care/screens/Insurance/view/insurance.dart';
+import 'package:health_care/screens/Home/controller/insurance_controller.dart';
+import 'package:health_care/screens/Home/view/home.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
+import 'package:health_care/utils/app_text_style.dart';
+import 'package:health_care/utils/function.dart';
+import 'package:health_care/utils/helper.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
 
-class MyTabScreen extends StatefulWidget {
-  const MyTabScreen({super.key});
+class FilterScreen extends StatefulWidget {
+  const FilterScreen({super.key});
 
   @override
-  _MyTabScreenState createState() => _MyTabScreenState();
+  _FilterScreenState createState() => _FilterScreenState();
 }
 
-class _MyTabScreenState extends State<MyTabScreen>
+class _FilterScreenState extends State<FilterScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   RxString isSelected = "FT".obs;
@@ -36,16 +38,14 @@ class _MyTabScreenState extends State<MyTabScreen>
           backgroundColor: AppColor.whiteColor,
           title: const Text('Filter Screen'),
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(0),
+            preferredSize: const Size.fromHeight(0),
             child: Container(
                 decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.5),
                   blurRadius: 0.1,
-                  offset: Offset(0, 0.3),
-                  // changes position of shadow
-                  // changes position of shadow
+                  offset: const Offset(0, 0.3),
                 ),
               ],
               border: const Border(
@@ -67,10 +67,11 @@ class _MyTabScreenState extends State<MyTabScreen>
                       children: <Widget>[
                         ListTile(
                           title: Text('Facility Types',
-                              style: TextStyle(
-                                  color: isSelected.value == "FT"
-                                      ? Colors.black
-                                      : AppColor.darkGrey)),
+                              style: isSelected.value == "FT"
+                                  ? AppTextStyle.appBarTextTitle.copyWith(
+                                      fontSize: 18, fontWeight: FontWeight.w900)
+                                  : AppTextStyle.greySubTitle
+                                      .copyWith(color: AppColor.greyColor)),
                           tileColor: isSelected.value == "FT"
                               ? Colors.black
                               : AppColor.lightGrey,
@@ -81,10 +82,11 @@ class _MyTabScreenState extends State<MyTabScreen>
                         ),
                         ListTile(
                           title: Text('Poppular Filter',
-                              style: TextStyle(
-                                  color: isSelected.value == "PF"
-                                      ? Colors.black
-                                      : AppColor.darkGrey)),
+                              style: isSelected.value == "PF"
+                                  ? AppTextStyle.appBarTextTitle.copyWith(
+                                      fontSize: 18, fontWeight: FontWeight.w900)
+                                  : AppTextStyle.greySubTitle
+                                      .copyWith(color: AppColor.greyColor)),
                           tileColor: isSelected.value == "PF"
                               ? Colors.black
                               : AppColor.lightGrey,
@@ -95,10 +97,11 @@ class _MyTabScreenState extends State<MyTabScreen>
                         ),
                         ListTile(
                           title: Text('Payment/Insurance/Funding Accepted',
-                              style: TextStyle(
-                                  color: isSelected.value == "PI"
-                                      ? Colors.black
-                                      : AppColor.darkGrey)),
+                              style: isSelected.value == "PI"
+                                  ? AppTextStyle.appBarTextTitle.copyWith(
+                                      fontSize: 18, fontWeight: FontWeight.w900)
+                                  : AppTextStyle.greySubTitle
+                                      .copyWith(color: AppColor.greyColor)),
                           tileColor: isSelected.value == "PI"
                               ? Colors.black
                               : AppColor.lightGrey,
@@ -139,10 +142,19 @@ class _MyTabScreenState extends State<MyTabScreen>
                 child: CustomButton(
                     txtColor: AppColor.blackColor,
                     bgColor: AppColor.whiteColor,
-                    text: "Cancel",
+                    text: "Clear Filter",
                     borderRadius: 0,
                     height: Sizes.s50.h,
-                    onTap: () {}),
+                    onTap: () {
+                      for (var element in insuranceController.filterChipList) {
+                        element.isChecked.value = false;
+                      }
+
+                      insuranceController.filterChipList[0].isChecked.value =
+                          true;
+                      insuranceController.aPIcall();
+                      Get.off(() => const InsuranceScreen());
+                    }),
               ),
               Expanded(
                 child: CustomButton(
@@ -152,9 +164,16 @@ class _MyTabScreenState extends State<MyTabScreen>
                     borderRadius: 0,
                     height: Sizes.s50.h,
                     width: Sizes.s330.w,
-                    onTap: () {
-                      Get.off(() => const InsuranceScreen());
-                      insuranceController.onSearchFilter();
+                    onTap: () async {
+                      bool isAnyFilterChecked = insuranceController
+                          .filterChipList
+                          .any((element) => element.isChecked.value == true);
+                      if (isAnyFilterChecked) {
+                        insuranceController.onSearchFilter();
+                        Get.off(() => const InsuranceScreen());
+                      } else {
+                        CommonFunctions.toast("Select at least one filter");
+                      }
                     }),
               ),
             ],
@@ -205,9 +224,16 @@ class FacilityTab extends StatelessWidget {
                         activeColor: Colors.black,
                         value: facility.isChecked.value,
                         onChanged: (value) {
-                          facility.isChecked.value = value!;
-
-                          log("value: $value , ${facility.name}");
+                          if (value == true) {
+                            facility.isChecked.value = value!;
+                          } else {
+                            int selectedCount = insuranceController.facilities
+                                .where((f) => f.isChecked.value == true)
+                                .length;
+                            if (selectedCount > 1) {
+                              facility.isChecked.value = value!;
+                            }
+                          }
                         },
                       ),
                       status == true
@@ -281,17 +307,19 @@ class PopularFilterTab extends StatelessWidget {
 
 class PaymentTab extends StatelessWidget {
   final insuranceController = Get.put(InsuranceController());
+
+  PaymentTab({super.key});
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
-          Text(
+          const Text(
             'Payment/insurance/funding Accepted',
             style: TextStyle(fontSize: 20),
           ),
-          SizedBox(height: 20),
+          verticalSpacing(10),
           Obx(
             () => Column(
               children:

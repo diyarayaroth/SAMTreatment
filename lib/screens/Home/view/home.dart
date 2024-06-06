@@ -1,18 +1,16 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:health_care/screens/Home/Controller/Home_screen_controller.dart';
-import 'package:health_care/screens/Insurance/controller/insurance_controller.dart';
-import 'package:health_care/screens/Insurance/controller/place_search_controller.dart';
-import 'package:health_care/screens/Insurance/view/filter_screen.dart';
+import 'package:health_care/screens/Home/controller/insurance_controller.dart';
+import 'package:health_care/screens/Home/controller/place_search_controller.dart';
+import 'package:health_care/screens/Home/view/filter_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
 import 'package:health_care/utils/app_text_style.dart';
+import 'package:health_care/utils/constant.dart';
+import 'package:health_care/utils/function.dart';
 import 'package:health_care/utils/helper.dart';
 import 'package:health_care/widgets/custom/custom_button.dart';
 import 'package:health_care/widgets/custom/custom_ins_card.dart';
@@ -33,35 +31,21 @@ class InsuranceScreen extends StatefulWidget {
 class _InsuranceScreenState extends State<InsuranceScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final insuranceController = Get.put(InsuranceController());
-  final homeScreenController = Get.put(HomeScreenController());
   final searchController = Get.put(PlaceSearchController());
-
-  // void openDrawer() {
-  //   _scaffoldKey.currentState?.openDrawer();
-  // }
 
   @override
   void initState() {
     super.initState();
+    CommonFunctions.checkConnectivity();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       backgroundColor: AppColor.whiteColor,
-      // drawer: Drawer(
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      //   width: ScreenUtil().screenWidth * 0.8,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.only(
-      //       topRight: Radius.circular(Sizes.s20.r),
-      //       bottomRight: Radius.circular(Sizes.s20.r),
-      //     ),
-      //   ),
-      //   child: const DrawerWidget(),
-      // ),
+
       appBar: SecondaryAppBar(
         isLeading: false,
         title: AppStrings.searchForTreatment,
@@ -72,7 +56,9 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
           ),
           tooltip: 'Open Dailog',
           onPressed: () {
-            Get.to(() => MyTabScreen());
+            insuranceController.zipCodeController.text.isNotEmpty
+                ? Get.to(() => const FilterScreen())
+                : CommonFunctions.toast("Please enter zip code or city");
           },
         ),
       ),
@@ -95,12 +81,15 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                     children: [
                       PrimaryTextField(
                         controller: insuranceController.zipCodeController,
-                        onChanged: (value) {
-                          if (value.isEmpty) {
-                            insuranceController.isSearching.value = false;
-                          } else {
-                            searchController.getPredictions(value);
-                            insuranceController.isSearching.value = true;
+                        onChanged: (value) async {
+                          if (await CommonFunctions.checkConnectivity()) {
+                            // Your code here if connectivity is true
+                            if (value.isEmpty) {
+                              insuranceController.isSearching.value = false;
+                            } else {
+                              searchController.getPredictions(value);
+                              insuranceController.isSearching.value = true;
+                            }
                           }
                         },
                         hintText: 'Enter Zip Code Or City',
@@ -147,8 +136,9 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                     onChanged: (String? value) {
                                       insuranceController.dropdownValue.value =
                                           value!;
+                                      insuranceController.aPIcall();
                                     },
-                                    items: insuranceController.distanceList
+                                    items: distanceList
                                         .map<DropdownMenuItem<String>>(
                                             (String value) {
                                       return DropdownMenuItem<String>(
@@ -167,19 +157,68 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                 text: "Search",
                                 onTap: () {
                                   insuranceController.isFirst.value = false;
-                                  insuranceController
-                                          .zipCodeController.text.isNotEmpty
-                                      ? insuranceController.onSearchFilter()
-                                      : Fluttertoast.showToast(
-                                          msg: "Enter Zip Code or City",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.black,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
+                                  insuranceController.aPIcall();
                                 })
                           ],
+                        ),
+                      ),
+                      verticalSpacing(10),
+                      Obx(
+                        () => Visibility(
+                          visible:
+                              insuranceController.isSearching.value == true,
+                          child: Container(
+                            height: context.height * 0.4,
+                            child: (ListView.builder(
+                              itemCount: searchController.predictions.length,
+                              itemBuilder: (context, index) {
+                                final prediction =
+                                    searchController.predictions[index];
+                                return ListTile(
+                                  title: Text(prediction.description ?? ""),
+                                  tileColor: AppColor.colorF1F1F1,
+                                  leading:
+                                      const Icon(Icons.location_on, size: 20),
+                                  onTap: () async {
+                                    try {
+                                      PlacesDetailsResponse detail =
+                                          await searchController
+                                              .getPlaceDetails(
+                                                  prediction.placeId ?? "");
+                                      final lat =
+                                          detail.result.geometry?.location.lat;
+                                      final lng =
+                                          detail.result.geometry?.location.lng;
+                                      final postalCode = await searchController
+                                          .getPostalCode(lat!, lng!);
+
+                                      insuranceController
+                                              .zipCodeController.text =
+                                          searchController.address.value;
+                                      insuranceController.zipCode.value =
+                                          postalCode;
+                                      insuranceController.latlong.value =
+                                          "$lat,$lng";
+
+                                      debugPrint(
+                                          "Check my postal code ${insuranceController.zipCode.value}");
+                                      insuranceController.isSearching.value =
+                                          false;
+                                      FocusScope.of(context).unfocus();
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Failed to fetch place details'),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            )),
+                          ),
                         ),
                       ),
                     ],
@@ -191,61 +230,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                 child: ListView(
                   children: [
                     verticalSpacing(10),
-                    Obx(
-                      () => Visibility(
-                        visible: insuranceController.isSearching.value == true,
-                        child: Container(
-                          height: context.height * 0.4,
-                          child: (ListView.builder(
-                            itemCount: searchController.predictions.length,
-                            itemBuilder: (context, index) {
-                              final prediction =
-                                  searchController.predictions[index];
-                              return ListTile(
-                                title: Text(prediction.description ?? ""),
-                                tileColor: AppColor.colorF1F1F1,
-                                leading:
-                                    const Icon(Icons.location_on, size: 20),
-                                onTap: () async {
-                                  try {
-                                    PlacesDetailsResponse detail =
-                                        await searchController.getPlaceDetails(
-                                            prediction.placeId ?? "");
-                                    final lat =
-                                        detail.result.geometry?.location.lat;
-                                    final lng =
-                                        detail.result.geometry?.location.lng;
-                                    final postalCode = await searchController
-                                        .getPostalCode(lat!, lng!);
-
-                                    insuranceController.zipCodeController.text =
-                                        searchController.address.value;
-                                    insuranceController.zipCode.value =
-                                        postalCode;
-                                    insuranceController.latlong.value =
-                                        "$lat,$lng";
-
-                                    debugPrint(
-                                        "Check my postal code ${insuranceController.zipCode.value}");
-                                    insuranceController.isSearching.value =
-                                        false;
-
-                                    // here i want to close keyboard
-                                    FocusScope.of(context).unfocus();
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Failed to fetch place details')),
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          )),
-                        ),
-                      ),
-                    ),
                     ListTileTheme(
                       child: Container(
                         decoration: BoxDecoration(
@@ -298,17 +282,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                   text: 'Search',
                                   onTap: () {
                                     insuranceController.isFirst.value = false;
-                                    insuranceController
-                                            .zipCodeController.text.isNotEmpty
-                                        ? insuranceController.onSearchFilter()
-                                        : Fluttertoast.showToast(
-                                            msg: "Enter Zip Code or City",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.black,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0);
+                                    insuranceController.aPIcall();
                                   },
                                 ),
                                 CustomButton(
@@ -317,7 +291,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                   borderRadius: 5,
                                   text: 'More Filters',
                                   onTap: () {
-                                    Get.to(() => MyTabScreen());
+                                    insuranceController
+                                            .zipCodeController.text.isNotEmpty
+                                        ? Get.to(() => const FilterScreen())
+                                        : CommonFunctions.toast(
+                                            "Please enter zip code or city");
                                   },
                                 ),
                               ],
@@ -362,8 +340,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                         for (var element in insuranceController
                                             .filterChipList) {
                                           element.isChecked.value = false;
-                                          insuranceController.onSearchFilter();
                                         }
+
+                                        insuranceController.filterChipList[0]
+                                            .isChecked.value = true;
+                                        insuranceController.aPIcall();
                                       },
                                       child: Chip(
                                         label: Text(
@@ -382,37 +363,33 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                       ),
                     ),
                     verticalSpacing(10),
-                    // shimmerEffect()
-                    Expanded(
-                      child: Obx(
-                        () => insuranceController.isLoading.value == true
-                            ? shimmerEffect()
-                            : insuranceController.getInsListRes.isEmpty
-                                ? insuranceController.isFirst.value
-                                    ? noData()
-                                    : noDataSearch()
-                                : ListView.separated(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: insuranceController
-                                        .getInsListRes.length,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: Sizes.s10.h),
-                                    itemBuilder: (context, index) {
-                                      return InsuranceComponent(
-                                        providerElement: insuranceController
-                                            .getInsListRes[index],
-                                        facilityType:
-                                            '${insuranceController.getInsListRes[index].typeFacility}',
-                                      );
-                                    },
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return const SizedBox(height: 10);
-                                    },
-                                  ),
-                      ),
+                    Obx(
+                      () => insuranceController.isLoading.value == true
+                          ? shimmerEffect()
+                          : insuranceController.getInsListRes.isEmpty
+                              ? insuranceController.isFirst.value
+                                  ? noData()
+                                  : noDataSearch()
+                              : ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount:
+                                      insuranceController.getInsListRes.length,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: Sizes.s10.h),
+                                  itemBuilder: (context, index) {
+                                    return InsuranceComponent(
+                                      providerElement: insuranceController
+                                          .getInsListRes[index],
+                                      facilityType:
+                                          '${insuranceController.getInsListRes[index].typeFacility}',
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return const SizedBox(height: 10);
+                                  },
+                                ),
                     ),
                   ],
                 ),

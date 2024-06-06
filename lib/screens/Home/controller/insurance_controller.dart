@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:get/state_manager.dart';
 import 'dart:convert';
 import 'package:health_care/Api/network.dart';
-import 'package:health_care/screens/Insurance/model/insurance_model.dart';
+import 'package:health_care/constants/baseurl.dart';
+import 'package:health_care/screens/Home/model/insurance_model.dart';
+import 'package:health_care/utils/constant.dart';
+import 'package:health_care/utils/function.dart';
 
 class InsuranceController extends GetxController {
   List<Rows> getInsListRes = <Rows>[].obs;
   List<Location> locations = <Location>[].obs;
   var distanceController = [].obs;
-  var distanceList = <String>[
-    '5 miles',
-    '10 miles',
-    '15 miles',
-    '20 miles',
-    '25 miles',
-    '50 miles',
-    '100 miles',
-  ];
   RxString dropdownValue = ''.obs;
   RxString zipCode = ''.obs;
   RxString latlong = ''.obs;
   RxString miles = ''.obs;
+  RxString address = ''.obs;
 
   TextEditingController zipCodeController = TextEditingController();
-  // create filterChipList for filter chip
   var filterChipList = <Facility>[].obs;
 
   var facilities = [
-    Facility(name: 'Substance Use', isChecked: false.obs),
-    Facility(name: 'Mental Health', isChecked: false.obs),
+    Facility(name: 'Substance Use', isChecked: true.obs),
+    Facility(name: 'Mental Health', isChecked: true.obs),
     Facility(name: 'Health Care Center', isChecked: false.obs),
     Facility(name: 'Buprenorphine Practitioners', isChecked: false.obs),
     Facility(name: 'Opioid Treatment Programs', isChecked: false.obs),
@@ -116,7 +109,7 @@ class InsuranceController extends GetxController {
             sType.value = "MH";
             break;
           case false:
-            sType.value = "BOTH";
+            sType.value = "";
             break;
         }
         break;
@@ -138,15 +131,14 @@ class InsuranceController extends GetxController {
         : '0';
   }
 
+  aPIcall() {
+    zipCodeController.text.isNotEmpty
+        ? onSearchFilter()
+        : CommonFunctions.toast("Please enter zip code");
+  }
+
   void popularFilter() {
     sCodeList.clear();
-// IHS/Tribal/Urban =ITU
-// Medicare =MC
-// Medicaid =MD
-// Federal military insurance =MI
-// Private health insurance =PI
-// Cash or self-payment =SF
-// State-financed health insurance plan other than Medicaid=SI
 
     List<String> facilityNames = [
       'Veterans Affairs',
@@ -259,9 +251,7 @@ class InsuranceController extends GetxController {
     BodyModel bodyValue,
   ) async {
     isLoading.value = true;
-    // String? distance = dropdownValue.value.replaceAll(' miles', '');
-    // double distanceInMeters = double.parse(distance) * 1609.34;
-    String? apiUrl = "https://findtreatment.gov/locator/listing";
+    String? apiUrl = baseUrl;
     debugPrint("Check my api url $apiUrl}");
     var body = {
       "sType": bodyValue.sType,
@@ -298,42 +288,8 @@ class InsuranceController extends GetxController {
       }
       return getInsListRes;
     } catch (e) {
+      CommonFunctions.toast("Something went wrong ${e} ");
       debugPrint("Check my error $e");
     }
   }
-}
-
-class Facility {
-  final String name;
-  final RxBool isChecked;
-
-  Facility({required this.name, required this.isChecked});
-}
-
-class BodyModel {
-  final String? sType;
-  final String? sAddr;
-  final String? sCodes;
-  final String? includeBupren;
-  final String? includeHRSA;
-  final String? includeOTP;
-  final String? limitType;
-  final String? limitValue;
-  final String? pageSize;
-  final String? page;
-  final String? sort;
-
-  BodyModel({
-    this.sType,
-    this.sAddr,
-    this.sCodes,
-    this.includeBupren,
-    this.includeHRSA,
-    this.includeOTP,
-    this.limitType,
-    this.limitValue,
-    this.pageSize,
-    this.page,
-    this.sort,
-  });
 }

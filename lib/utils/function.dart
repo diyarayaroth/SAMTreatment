@@ -9,7 +9,7 @@ class CommonFunctions {
       timeInSecForIosWeb: 1,
       msg: info,
       textColor: Colors.white,
-      toastLength: Toast.LENGTH_LONG,
+      toastLength: Toast.LENGTH_SHORT, // Change the toast length to SHORT
     );
   }
 

@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'app_color.dart';
 import 'app_sizes.dart';
-import 'create_material_color.dart';
 
 class AppTextStyle {
   AppTextStyle._();
 
-  static const TextStyle headline1 = TextStyle(
-    fontSize: Sizes.s28,
-    fontWeight: FontWeight.w900,
-    color: AppColor.whiteColor,
-  );
   static const TextStyle buttonTextStyle = TextStyle(
       fontSize: Sizes.s12,
       fontWeight: FontWeight.bold,

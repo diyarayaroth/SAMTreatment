@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_sizes.dart';
-import 'package:health_care/utils/app_text.dart';
 import 'package:health_care/utils/app_text_style.dart';
 
 class PrimaryTextField extends StatelessWidget {

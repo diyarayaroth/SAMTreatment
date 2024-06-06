@@ -1,3 +1,5 @@
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 class InsuranceListModel {
   int? page;
   int? recordCount;
@@ -146,4 +148,39 @@ class Services {
     data['f3'] = this.f3;
     return data;
   }
+}
+
+class Facility {
+  final String name;
+  final RxBool isChecked;
+
+  Facility({required this.name, required this.isChecked});
+}
+
+class BodyModel {
+  final String? sType;
+  final String? sAddr;
+  final String? sCodes;
+  final String? includeBupren;
+  final String? includeHRSA;
+  final String? includeOTP;
+  final String? limitType;
+  final String? limitValue;
+  final String? pageSize;
+  final String? page;
+  final String? sort;
+
+  BodyModel({
+    this.sType,
+    this.sAddr,
+    this.sCodes,
+    this.includeBupren,
+    this.includeHRSA,
+    this.includeOTP,
+    this.limitType,
+    this.limitValue,
+    this.pageSize,
+    this.page,
+    this.sort,
+  });
 }

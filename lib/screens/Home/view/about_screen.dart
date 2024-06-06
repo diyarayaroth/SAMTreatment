@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:health_care/screens/Insurance/model/insurance_model.dart';
+import 'package:health_care/screens/Home/model/insurance_model.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_string.dart';
 import 'package:health_care/utils/app_text_style.dart';
+import 'package:health_care/utils/function.dart';
 import 'package:health_care/utils/helper.dart';
 import 'package:health_care/widgets/primary/primary_appbar.dart';
 import 'package:health_care/widgets/primary/primary_padding.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -21,19 +21,28 @@ class InsuranceAboutScreen extends StatefulWidget {
 }
 
 class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
-  String address = "";
+  RxString address = "".obs;
+  RxDouble lat = 0.0.obs;
+  RxDouble long = 0.0.obs;
+  @override
+  void initState() {
+    super.initState();
+    CommonFunctions.checkConnectivity();
+    lat.value = double.parse("${widget.providerElement.latitude}");
+    long.value = double.parse("${widget.providerElement.longitude}");
+    debugPrint("Lat: ${lat.value}, Long: ${long.value}");
+  }
 
   Future<void> _showAddressDialog(LatLng latLng) async {
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
       Placemark place = placemarks[0];
-      setState(() {
-        address =
-            "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.postalCode}, ${place.country}";
-      });
+
+      address.value =
+          "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.postalCode}, ${place.country}";
     } catch (e) {
-      print(e);
+      debugPrint("Error: $e");
     }
   }
 
@@ -65,8 +74,17 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
                   children: [
                     const Icon(Icons.call, color: Colors.black, size: 16),
                     horizontalSpacing(5),
-                    Text(" ${widget.providerElement.phone}",
-                        style: AppTextStyle.regulerS14Black),
+                    // Text(" ${widget.providerElement.phone}",
+                    //     style: AppTextStyle.regulerS14Black),
+                    InkWell(
+                      onTap: () {
+                        // ignore: deprecated_member_use
+                        launch("tel:${widget.providerElement.phone}");
+                      },
+                      child: Text(
+                          " ${widget.providerElement.phone?.substring(0, 12)}",
+                          style: AppTextStyle.regulerS14Black),
+                    ),
                   ],
                 ),
                 Row(
@@ -89,6 +107,7 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
                     horizontalSpacing(5),
                     InkWell(
                       onTap: () {
+                        // ignore: deprecated_member_use
                         launch("${widget.providerElement.website}");
                       },
                       child: SizedBox(
@@ -121,7 +140,7 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
                       width: context.width * 0.7,
                       child: Text(
                         "${widget.providerElement.street1}, ${widget.providerElement.city}, ${widget.providerElement.state}, ${widget.providerElement.zip}",
-                        style: TextStyle(color: Colors.black),
+                        style: AppTextStyle.regulerS14Black,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ),
@@ -134,23 +153,7 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
             SizedBox(
               height: context.height * 0.3,
               width: double.infinity,
-              child: GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(37.5042267, -121.9643745),
-                  zoom: 14.0,
-                ),
-                markers: {
-                  Marker(
-                      markerId: const MarkerId("selected-location"),
-                      position: const LatLng(37.5042267, -121.9643745),
-                      onTap: () => _showAddressDialog(
-                          const LatLng(37.5042267, -121.9643745)),
-                      infoWindow: InfoWindow(
-                        title: "Address",
-                        snippet: address,
-                      )),
-                },
-              ),
+              child: buildMap(lat.value, long.value, address.value),
             ),
             verticalSpacing(10),
             Row(
@@ -307,6 +310,25 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildMap(double lat, double long, String address) {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(lat, long),
+        zoom: 14.0,
+      ),
+      markers: {
+        Marker(
+            markerId: const MarkerId("selected-location"),
+            position: LatLng(lat, long),
+            onTap: () => _showAddressDialog(LatLng(lat, long)),
+            infoWindow: InfoWindow(
+              title:
+                  "${widget.providerElement.street1}, ${widget.providerElement.city}, ${widget.providerElement.state}, ${widget.providerElement.zip}",
+            )),
+      },
     );
   }
 }

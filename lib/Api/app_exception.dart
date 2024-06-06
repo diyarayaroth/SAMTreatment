@@ -11,7 +11,7 @@ class AppException implements Exception {
   AppException({required this.message, required this.errorCode, this.tag});
   @override
   String toString() {
-    return '{"message": "$message", "errorCode": $errorCode}';
+    return message;
   }
 
   static AppException decodeExceptionData({required String jsonString}) {
@@ -38,8 +38,8 @@ class AppException implements Exception {
     } else if (exception is SocketException) {
       debugPrint(stackTrace ?? "No stack provided");
       throw AppException(
-        message: "Internet not available." +
-            r'''\n\n''' +
+        message: "Internet not available."
+            '\n'
             "Cross check your internet connectivity and try again later.",
         errorCode: 101,
       );
