@@ -169,7 +169,7 @@ class _FilterScreenState extends State<FilterScreen>
                           .filterChipList
                           .any((element) => element.isChecked.value == true);
                       if (isAnyFilterChecked) {
-                        insuranceController.onSearchFilter();
+                        insuranceController.onSearchFilter(false);
                         Get.off(() => const InsuranceScreen());
                       } else {
                         CommonFunctions.toast("Select at least one filter");
@@ -199,14 +199,24 @@ class FacilityTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: status == true
+          ? const EdgeInsets.all(8.0)
+          : const EdgeInsets.all(0.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 8),
-            child: Text(
+          // status == true
+          //     ? SizedBox.shrink()
+          //     : Divider(
+          //         color: Colors.grey,
+          //         thickness: 1,
+          //       ),
+          Padding(
+            padding: status == true
+                ? const EdgeInsets.only(left: 10, bottom: 8)
+                : const EdgeInsets.only(left: 10),
+            child: const Text(
               'Facility Types',
               style: TextStyle(fontSize: 20),
             ),
@@ -216,7 +226,7 @@ class FacilityTab extends StatelessWidget {
               children: insuranceController.facilities.map((facility) {
                 return SizedBox(
                   height:
-                      status == true ? Get.height * 0.06 : Get.height * 0.03,
+                      status == true ? Get.height * 0.06 : Get.height * 0.035,
                   child: Row(
                     children: [
                       Checkbox(
@@ -260,14 +270,18 @@ class PopularFilterTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: status == true
+          ? const EdgeInsets.all(8.0)
+          : const EdgeInsets.all(0.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 8),
-            child: Text(
+          Padding(
+            padding: status == true
+                ? const EdgeInsets.only(left: 10, bottom: 8)
+                : const EdgeInsets.only(left: 10),
+            child: const Text(
               'Popular Filter',
               style: TextStyle(fontSize: 20),
             ),
@@ -277,7 +291,7 @@ class PopularFilterTab extends StatelessWidget {
               children: insuranceController.populerFilter.map((facility) {
                 return SizedBox(
                   height:
-                      status == true ? Get.height * 0.06 : Get.height * 0.03,
+                      status == true ? Get.height * 0.06 : Get.height * 0.035,
                   child: Row(
                     children: [
                       Checkbox(

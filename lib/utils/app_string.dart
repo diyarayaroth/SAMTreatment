@@ -13,8 +13,7 @@ class AppStrings {
   static const String chooseDoctorOn2 = 'Choose Best Doctors';
   static const String easyAppointmentOn3 = 'Easy Appointments';
   static const String ontext =
-      'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.';
-
+      'Confidential and anonymous resource for locating treatment facilities for mental and substance use disorders in the United States and its territories.';
   //home
   static const String list = 'List';
   static const String search = 'Search';
@@ -25,7 +24,7 @@ class AppStrings {
   static const String searchDoctor = 'Search Doctor';
   static const String searchPlaces = 'Search Places';
   static const String insurance = 'Insurance';
-  static const String searchForTreatment = 'search for treatment';
+  static const String searchForTreatment = 'Search for treatment';
   static const String treatment = 'Treatment';
   static const String help = 'Help';
   static const String male = 'Male';

@@ -22,7 +22,7 @@ class AppAsset {
   static const String locationIcon = "${imagePath}location_icon.png";
   static const String rightIcon = "${imagePath}right_icon.png";
   static const String servicesIcon = "${imagePath}servicesIcon.png";
-  static const String cardIcon = "${imagePath}cardIcon.png";
+  static const String cardIcon = "${imagePath}cardImg.png";
   static const String alertIcon = "${imagePath}alertIcon.png";
   static const String instructionIcon = "${imagePath}instructionIcon.png";
 

@@ -13,7 +13,7 @@ class InsuranceController extends GetxController {
   List<Rows> getInsListRes = <Rows>[].obs;
   List<Location> locations = <Location>[].obs;
   var distanceController = [].obs;
-  RxString dropdownValue = ''.obs;
+  var dropdownValue = ''.obs;
   RxString zipCode = ''.obs;
   RxString latlong = ''.obs;
   RxString miles = ''.obs;
@@ -59,6 +59,8 @@ class InsuranceController extends GetxController {
   RxBool isMentalHealth = false.obs;
   RxBool isSubstanceUse = false.obs;
   RxBool isFirst = true.obs;
+  RxBool isOpen = false.obs;
+  RxBool isFilterSelected = true.obs;
 
   var dropdownValue1 = [].obs;
   var dropdownValue2 = [].obs;
@@ -69,11 +71,12 @@ class InsuranceController extends GetxController {
   RxString includeHRSA = ''.obs;
   RxString includeOTP = ''.obs;
   RxString sType = ''.obs;
+  var pageNumber = 1.obs;
   var sCodeList = [].obs;
 
   @override
   void onInit() {
-    dropdownValue = distanceList.first.obs;
+    dropdownValue = distanceList[4].obs;
     filterChipList
         .addAll([...facilities, ...populerFilter, ...paymentAcceptedCheckList]);
     super.onInit();
@@ -133,7 +136,7 @@ class InsuranceController extends GetxController {
 
   aPIcall() {
     zipCodeController.text.isNotEmpty
-        ? onSearchFilter()
+        ? onSearchFilter(false)
         : CommonFunctions.toast("Please enter zip code");
   }
 
@@ -224,7 +227,11 @@ class InsuranceController extends GetxController {
     }
   }
 
-  void onSearchFilter() {
+  onSearchFilter(
+    bool isLoadMore,
+  ) {
+    pageNumber.value = isLoadMore == true ? pageNumber.value : 1;
+    isLoadMore == false ? getInsListRes.clear() : null;
     facilityFilter();
     popularFilter();
     String? distance = dropdownValue.value.replaceAll(' miles', '');
@@ -240,7 +247,7 @@ class InsuranceController extends GetxController {
       limitType: "2",
       limitValue: distanceInMeters.value.toString(),
       pageSize: "10",
-      page: "1",
+      page: isLoadMore == true ? pageNumber.toString() : "1",
       sort: "0",
     );
 
@@ -260,11 +267,11 @@ class InsuranceController extends GetxController {
       "includeBupren": bodyValue.includeBupren,
       "includeHRSA": bodyValue.includeHRSA,
       "includeOTP": bodyValue.includeOTP,
-      "limitType": "2",
+      "limitType": bodyValue.limitType,
       "limitValue": bodyValue.limitValue,
-      "pageSize": "1000",
-      "page": "1",
-      "sort": "0",
+      "pageSize": bodyValue.pageSize,
+      "page": bodyValue.page,
+      "sort": bodyValue.sort,
     };
     debugPrint("Check my body ${jsonEncode(body)}");
     var headers = {
@@ -279,17 +286,32 @@ class InsuranceController extends GetxController {
       );
       if (result != null) {
         InsuranceListModel insList = InsuranceListModel.fromJson(result);
-        getInsListRes = insList.rows ?? [];
+        if (pageNumber.value == 1) {
+          getInsListRes = insList.rows ?? [];
+          isLoading.value = false;
+        } else {
+          getInsListRes.addAll(insList.rows ?? []);
+          isLoading.value = false;
+        }
         debugPrint("Check my ins list 21 ${jsonEncode(getInsListRes)}");
-        isLoading.value = false;
       } else {
         isLoading.value = false;
         throw Exception(result.data);
       }
       return getInsListRes;
     } catch (e) {
-      CommonFunctions.toast("Something went wrong ${e} ");
+      CommonFunctions.toast("Something went wrong $e ");
       debugPrint("Check my error $e");
+    }
+  }
+
+  loadMore() async {
+    debugPrint("Check my page number before ${pageNumber.value}");
+    if (!isLoading.value) {
+      pageNumber.value++;
+      isLoading.value = true;
+      debugPrint("Check my page number after ${pageNumber.value}");
+      await onSearchFilter(true);
     }
   }
 }

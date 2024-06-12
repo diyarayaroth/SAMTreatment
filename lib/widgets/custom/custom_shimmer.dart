@@ -5,10 +5,10 @@ import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/helper.dart';
 import 'package:shimmer/shimmer.dart';
 
-Widget shimmerEffect() {
+Widget shimmerEffect(int itemCount) {
   return ListView.builder(
     shrinkWrap: true,
-    itemCount: 5,
+    itemCount: itemCount,
     padding: EdgeInsets.symmetric(vertical: Sizes.s10.h),
     itemBuilder: (context, index) {
       return Column(

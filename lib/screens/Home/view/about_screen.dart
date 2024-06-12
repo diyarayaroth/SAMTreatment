@@ -171,60 +171,6 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
                 ),
               ],
             ),
-            verticalSpacing(10),
-            Text("Payment, insurance or funding accepted",
-                style: AppTextStyle.appBarTextTitle.copyWith(
-                  fontSize: 16,
-                )),
-            verticalSpacing(10),
-            Row(
-              children: [
-                Image.asset((AppAsset.rightIcon), height: 12, width: 12),
-                horizontalSpacing(5),
-                Text("Medicare",
-                    style: AppTextStyle.regulerS14Black.copyWith(fontSize: 14)),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset((AppAsset.rightIcon), height: 12, width: 12),
-                horizontalSpacing(5),
-                Text("Federal military insurance (e.g., TRICARE)",
-                    style: AppTextStyle.regulerS14Black.copyWith(fontSize: 14)),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset((AppAsset.rightIcon), height: 12, width: 12),
-                horizontalSpacing(5),
-                Text("Private health insurance",
-                    style: AppTextStyle.regulerS14Black.copyWith(fontSize: 14)),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset((AppAsset.rightIcon), height: 12, width: 12),
-                horizontalSpacing(5),
-                Text("Cash or self-payment",
-                    style: AppTextStyle.regulerS14Black.copyWith(fontSize: 14)),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset((AppAsset.rightIcon), height: 12, width: 12),
-                horizontalSpacing(5),
-                Text("U.S. Department of VA funds",
-                    style: AppTextStyle.regulerS14Black.copyWith(fontSize: 14)),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset((AppAsset.rightIcon), height: 12, width: 12),
-                horizontalSpacing(5),
-                Text("Medicare",
-                    style: AppTextStyle.regulerS14Black.copyWith(fontSize: 14)),
-              ],
-            ),
             verticalSpacing(5),
             const Divider(
               thickness: 0.5,

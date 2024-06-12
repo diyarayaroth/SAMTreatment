@@ -6,7 +6,6 @@ import 'package:health_care/screens/Home/controller/place_search_controller.dart
 import 'package:health_care/screens/Home/view/filter_screen.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
-import 'package:health_care/utils/app_sizes.dart';
 import 'package:health_care/utils/app_string.dart';
 import 'package:health_care/utils/app_text_style.dart';
 import 'package:health_care/utils/constant.dart';
@@ -32,11 +31,18 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final insuranceController = Get.put(InsuranceController());
   final searchController = Get.put(PlaceSearchController());
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     CommonFunctions.checkConnectivity();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        insuranceController.loadMore();
+      }
+    });
   }
 
   @override
@@ -68,7 +74,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         child: PrimaryPadding(
           child: Column(
             children: [
-              verticalSpacing(10),
               Container(
                 decoration: BoxDecoration(
                   color: AppColor.colorF1F1F1,
@@ -111,7 +116,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                 horizontalSpacing(5),
                                 const Text('Distance'),
                                 horizontalSpacing(10),
-                                //select distance dropdown
                                 Container(
                                   height: 30,
                                   padding:
@@ -140,12 +144,13 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                     },
                                     items: distanceList
                                         .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
+                                      (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      },
+                                    ).toList(),
                                   ),
                                 )
                               ],
@@ -162,7 +167,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                           ],
                         ),
                       ),
-                      verticalSpacing(10),
                       Obx(
                         () => Visibility(
                           visible:
@@ -226,174 +230,248 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                 ),
               ),
               verticalSpacing(10),
-              Expanded(
-                child: ListView(
+              Obx(
+                () => Expanded(
+                    child: ListView(
+                  controller: scrollController,
+                  physics: insuranceController.getInsListRes.isEmpty
+                      ? const NeverScrollableScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
                   children: [
-                    verticalSpacing(10),
-                    ListTileTheme(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: ExpansionTile(
-                          onExpansionChanged: (value) {
-                            insuranceController.isFacilityTab.value = value;
+                    Column(
+                      // padding: const EdgeInsets.all(0),
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            insuranceController.isOpen.value =
+                                !insuranceController.isOpen.value;
                           },
-                          iconColor: AppColor.blackColor,
-                          title: Row(
-                            children: [
-                              const Icon(
-                                Icons.filter_alt_sharp,
-                                size: 25,
-                                color: AppColor.color00539F,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
                               ),
-                              horizontalSpacing(5),
-                              Text(
-                                'Filter By',
-                                style: AppTextStyle.appBarTextTitle.copyWith(
-                                  fontSize: 16,
-                                  color: AppColor.blackColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          children: [
-                            FacilityTab(
-                              status: false,
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                            const Divider(
-                              color: Colors.grey,
-                              thickness: 1,
-                            ),
-                            PopularFilterTab(
-                              status: false,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            child: Column(
                               children: [
-                                CustomButton(
-                                  width: context.width * 0.25,
-                                  height: context.height * 0.04,
-                                  borderRadius: 5,
-                                  text: 'Search',
-                                  onTap: () {
-                                    insuranceController.isFirst.value = false;
-                                    insuranceController.aPIcall();
-                                  },
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 8,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.filter_alt_sharp,
+                                            size: 25,
+                                            color: AppColor.color00539F,
+                                          ),
+                                          horizontalSpacing(5),
+                                          Text(
+                                            'Filter By',
+                                            style: AppTextStyle.appBarTextTitle
+                                                .copyWith(
+                                              fontSize: 16,
+                                              color: AppColor.blackColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      Icon(
+                                        insuranceController.isOpen.value
+                                            ? Icons.keyboard_arrow_up
+                                            : Icons.keyboard_arrow_down,
+                                        color: AppColor.color00539F,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                CustomButton(
-                                  width: context.width * 0.25,
-                                  height: context.height * 0.04,
-                                  borderRadius: 5,
-                                  text: 'More Filters',
-                                  onTap: () {
-                                    insuranceController
-                                            .zipCodeController.text.isNotEmpty
-                                        ? Get.to(() => const FilterScreen())
-                                        : CommonFunctions.toast(
-                                            "Please enter zip code or city");
-                                  },
+                                Visibility(
+                                  visible: insuranceController.isOpen.value,
+                                  child: Column(
+                                    children: [
+                                      Divider(
+                                        color: Colors.grey,
+                                        thickness: 1,
+                                      ),
+                                      FacilityTab(
+                                        status: false,
+                                      ),
+                                      const Divider(
+                                        color: Colors.grey,
+                                        thickness: 1,
+                                      ),
+                                      PopularFilterTab(
+                                        status: false,
+                                      ),
+                                      verticalSpacing(10),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            CustomButton(
+                                              width: context.width * 0.35,
+                                              height: context.height * 0.042,
+                                              borderRadius: 5,
+                                              text: 'More Filters',
+                                              onTap: () {
+                                                insuranceController
+                                                        .zipCodeController
+                                                        .text
+                                                        .isNotEmpty
+                                                    ? Get.to(() =>
+                                                        const FilterScreen())
+                                                    : CommonFunctions.toast(
+                                                        "Please enter zip code or city");
+                                              },
+                                            ),
+                                            CustomButton(
+                                              width: context.width * 0.35,
+                                              height: context.height * 0.042,
+                                              borderRadius: 5,
+                                              text: 'Apply Filters',
+                                              onTap: () {
+                                                insuranceController
+                                                    .isFirst.value = false;
+                                                insuranceController.aPIcall();
+                                                insuranceController
+                                                        .isOpen.value =
+                                                    !insuranceController
+                                                        .isOpen.value;
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      verticalSpacing(10),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                            verticalSpacing(10),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    verticalSpacing(10),
-                    Obx(
-                      () => Visibility(
-                        visible: insuranceController.filterChipList
-                            .any((element) => element.isChecked.value == true),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Wrap(
-                            spacing: 2,
-                            children: [
-                              insuranceController.dropdownValue.value.isNotEmpty
-                                  ? Chip(
-                                      label: Text(
-                                        insuranceController.dropdownValue.value,
-                                        style: AppTextStyle.regulerS14Black
-                                            .copyWith(
-                                                color: AppColor.blackColor),
+                        verticalSpacing(5),
+                        Obx(
+                          () => Visibility(
+                            visible: insuranceController.filterChipList.any(
+                                (element) => element.isChecked.value == true),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  if (insuranceController
+                                      .dropdownValue.value.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 3),
+                                      child: Chip(
+                                        label: Text(
+                                          insuranceController
+                                              .dropdownValue.value,
+                                          style: AppTextStyle.regulerS14Black
+                                              .copyWith(
+                                            color: AppColor.blackColor,
+                                          ),
+                                        ),
                                       ),
-                                    )
-                                  : const SizedBox.shrink(),
-                              ...insuranceController.filterChipList.map(
-                                (e) => e.isChecked.isTrue
-                                    ? Chip(
-                                        label: Text(e.name),
-                                      )
-                                    : const SizedBox.shrink(),
-                              ),
-                              insuranceController.filterChipList.any(
+                                    ),
+                                  ...insuranceController.filterChipList.map(
+                                    (e) {
+                                      if (e.isChecked.isTrue) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 3),
+                                          child: Chip(
+                                            label: Text(e.name),
+                                          ),
+                                        );
+                                      } else {
+                                        return SizedBox();
+                                      }
+                                    },
+                                  ),
+                                  if (insuranceController.filterChipList.any(
                                       (element) =>
-                                          element.isChecked.value == true)
-                                  ? GestureDetector(
+                                          element.isChecked.value == true))
+                                    GestureDetector(
                                       onTap: () {
                                         for (var element in insuranceController
                                             .filterChipList) {
                                           element.isChecked.value = false;
                                         }
-
                                         insuranceController.filterChipList[0]
                                             .isChecked.value = true;
                                         insuranceController.aPIcall();
                                       },
-                                      child: Chip(
-                                        label: Text(
-                                          'Clear All',
-                                          style: AppTextStyle.regulerS14Black
-                                              .copyWith(
-                                                  color: AppColor.whiteColor),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 3),
+                                        child: Chip(
+                                          label: Text(
+                                            'Clear All',
+                                            style: AppTextStyle.regulerS14Black
+                                                .copyWith(
+                                              color: AppColor.whiteColor,
+                                            ),
+                                          ),
+                                          backgroundColor: AppColor.blackColor,
                                         ),
-                                        backgroundColor: AppColor.blackColor,
                                       ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ],
+                                    ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                     verticalSpacing(10),
-                    Obx(
-                      () => insuranceController.isLoading.value == true
-                          ? shimmerEffect()
-                          : insuranceController.getInsListRes.isEmpty
-                              ? insuranceController.isFirst.value
-                                  ? noData()
-                                  : noDataSearch()
-                              : ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount:
-                                      insuranceController.getInsListRes.length,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: Sizes.s10.h),
-                                  itemBuilder: (context, index) {
+                    insuranceController.isLoading.value == true &&
+                            insuranceController.getInsListRes.isEmpty
+                        ? shimmerEffect(5)
+                        : insuranceController.getInsListRes.isEmpty
+                            ? insuranceController.isFirst.value
+                                ? noData()
+                                : noDataSearch()
+                            : ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    insuranceController.getInsListRes.length +
+                                        (insuranceController.isLoading.value
+                                            ? 1
+                                            : 0),
+                                itemBuilder: (context, index) {
+                                  if (index <
+                                      insuranceController
+                                          .getInsListRes.length) {
                                     return InsuranceComponent(
                                       providerElement: insuranceController
                                           .getInsListRes[index],
                                       facilityType:
                                           '${insuranceController.getInsListRes[index].typeFacility}',
                                     );
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const SizedBox(height: 10);
-                                  },
-                                ),
-                    ),
+                                  } else {
+                                    return shimmerEffect(1);
+                                  }
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return const SizedBox(height: 10);
+                                },
+                              ),
                   ],
-                ),
-              ),
+                )),
+              )
             ],
           ),
         ),
@@ -420,7 +498,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         ),
         verticalSpacing(15),
         const Text(
-            "Find confidential and anonymous resource for locating treatment facilities for mental and substance use disorders in the United States and its territories")
+            "In the Your Location field enter an address, city, zip code, and/or facility name and select a value from the list to set your location.\n\nTo limit the number of records returned, utilize the State, County, or Distance filter options. Additional filtering options can be found along the left side under the Filter by section (Facility Name, Facility Types, etc.) and will automatically filter the search results when entered.")
       ],
     );
   }

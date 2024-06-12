@@ -34,7 +34,7 @@ class OnboardingScreen extends StatelessWidget {
               const PrimaryPadding(
                 child: Column(
                   children: [
-                    Text(AppStrings.findDoctorOn1,
+                    Text(AppStrings.searchForTreatment,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
