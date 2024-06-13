@@ -295,7 +295,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                   visible: insuranceController.isOpen.value,
                                   child: Column(
                                     children: [
-                                      Divider(
+                                      const Divider(
+                                        height: 0.5,
                                         color: Colors.grey,
                                         thickness: 1,
                                       ),
@@ -434,7 +435,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                         ),
                       ],
                     ),
-                    verticalSpacing(10),
                     insuranceController.isLoading.value == true &&
                             insuranceController.getInsListRes.isEmpty
                         ? shimmerEffect(5)

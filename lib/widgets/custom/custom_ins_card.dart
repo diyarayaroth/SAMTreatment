@@ -24,7 +24,7 @@ class InsuranceComponent extends StatelessWidget {
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -32,10 +32,12 @@ class InsuranceComponent extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColor.blackColor,
-              borderRadius: BorderRadius.circular(5),
-            ),
+            decoration: const BoxDecoration(
+                color: AppColor.blackColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                )),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -136,24 +138,18 @@ class InsuranceComponent extends StatelessWidget {
                 ),
                 verticalSpacing(10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.location_on,
-                            color: Colors.black, size: 16),
-                        horizontalSpacing(5),
-                        SizedBox(
-                          width: context.width * 0.7,
-                          child: Text(
-                            "${providerElement.street1}, ${providerElement.city}, ${providerElement.state}, ${providerElement.zip}",
-                            style: AppTextStyle.regulerS14Black,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ],
+                    const Icon(Icons.location_on,
+                        color: Colors.black, size: 16),
+                    horizontalSpacing(5),
+                    Expanded(
+                      child: Text(
+                        "${providerElement.street1}, ${providerElement.city}, ${providerElement.state}, ${providerElement.zip}",
+                        style: AppTextStyle.regulerS14Black,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
                     ),
                   ],
                 ),
@@ -176,8 +172,7 @@ class InsuranceComponent extends StatelessWidget {
                           Image.asset(AppAsset.rightIcon,
                               height: 15, width: 15),
                           horizontalSpacing(5),
-                          SizedBox(
-                            width: context.width * 0.7,
+                          Expanded(
                             child: Text(
                               "${providerElement.services?.first.f3}",
                               style: AppTextStyle.regulerS14Black,
@@ -201,9 +196,7 @@ class InsuranceComponent extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(
-                        width: context.width * 0.6,
-                        child: facilityTypeData(facilityType)),
+                    Expanded(child: facilityTypeData(facilityType)),
                   ],
                 ),
               ],

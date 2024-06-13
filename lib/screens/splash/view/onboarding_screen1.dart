@@ -31,17 +31,18 @@ class OnboardingScreen extends StatelessWidget {
                 ),
               ),
               verticalSpacing(103),
-              const PrimaryPadding(
+              PrimaryPadding(
                 child: Column(
                   children: [
-                    Text(AppStrings.searchForTreatment,
+                    const Text(AppStrings.searchForTreatment,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: AppColor.blackColor,
                         )),
-                    Text(
+                    verticalSpacing(10),
+                    const Text(
                       AppStrings.ontext,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -54,7 +55,7 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ],
           ),
-          verticalSpacing(30),
+          verticalSpacing(20),
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
             child: CustomButton(
@@ -67,18 +68,6 @@ class OnboardingScreen extends StatelessWidget {
               onTap: controller.onGetStarted,
             ),
           ),
-
-          // Obx(
-          //   () => GestureDetector(
-          //     onTap: controller.onGetSkip,
-          //     child: Text(
-          //       controller.currentPage.value == controller.pages.length - 3
-          //           ? AppStrings.skip
-          //           : AppStrings.previous,
-          //       style: const TextStyle(color: AppColor.greyColor, fontSize: 14),
-          //     ),
-          //   ),
-          // ),
           const SizedBox(height: 15),
         ]),
       ),
