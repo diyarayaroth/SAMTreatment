@@ -300,7 +300,9 @@ class InsuranceController extends GetxController {
       }
       return getInsListRes;
     } catch (e) {
-      CommonFunctions.toast("Something went wrong $e ");
+      isLoading.value = false;
+      isSearching.value = false;
+      CommonFunctions.toast("Please Select Correct Location");
       debugPrint("Check my error $e");
     }
   }
