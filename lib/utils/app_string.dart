@@ -31,6 +31,10 @@ class AppStrings {
   static const String female = 'Female';
   static const String Other = 'Other';
   static const String source = 'Source';
+  static const String substanceUse = '(Substance Use)';
+  static const String substanceUseSText = "Substance Use";
+  static const String mentalHealth = '(Mental Health)';
+  static const String mentalHealthText = "Mental Health";
   static const String mhText =
       'National Substance Use and Mental Health Services Survey (N-SUMHSS)';
   static const String hRSAText = 'HRSA Data Warehouse';
@@ -39,6 +43,8 @@ class AppStrings {
   static const String unknown = 'unknown';
 
   // Dashboard
-
   static const String dashboard = 'Dashboard';
+  static const String failedToFetch = 'Failed to fetch place details';
+  static const String postalCodenotfound = 'Postal code not found';
+  static const String errorFetchingpostalcode = 'Error fetching postal code';
 }

@@ -149,12 +149,9 @@ class NetworkAPICall {
       request.headers.addAll(header);
       request.files
           .add(await http.MultipartFile.fromPath('file', image.absolute.path));
-      debugPrint("request.fields => ${request.fields}");
       http.StreamedResponse streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
-      debugPrint("Response code of Login API ==> ${response.statusCode}");
       if (response.statusCode == 200) {
-        debugPrint(response.body);
         return checkResponse(response);
       } else {
         debugPrint(response.reasonPhrase);

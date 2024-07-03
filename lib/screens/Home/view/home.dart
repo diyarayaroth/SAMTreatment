@@ -142,7 +142,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                           value!;
                                       insuranceController.aPIcall();
                                     },
-                                    items: distanceList
+                                    items: AppConst.distanceList
                                         .map<DropdownMenuItem<String>>(
                                       (String value) {
                                         return DropdownMenuItem<String>(
@@ -203,9 +203,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                           postalCode;
                                       insuranceController.latlong.value =
                                           "$lat,$lng";
-
-                                      debugPrint(
-                                          "Check my postal code ${insuranceController.zipCode.value}");
                                       insuranceController.isSearching.value =
                                           false;
                                       FocusScope.of(context).unfocus();

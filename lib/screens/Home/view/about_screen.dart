@@ -30,7 +30,6 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
     CommonFunctions.checkConnectivity();
     lat.value = double.parse("${widget.providerElement.latitude}");
     long.value = double.parse("${widget.providerElement.longitude}");
-    debugPrint("Lat: ${lat.value}, Long: ${long.value}");
   }
 
   Future<void> _showAddressDialog(LatLng latLng) async {

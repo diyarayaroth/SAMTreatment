@@ -1,8 +1,9 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, prefer_const_constructors, sized_box_for_whitespace
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:health_care/screens/Home/controller/insurance_controller.dart';
 import 'package:health_care/utils/app_color.dart';
+import 'package:health_care/utils/app_string.dart';
 
 class ListTileWidget extends StatefulWidget {
   String? title;
@@ -28,14 +29,11 @@ class _MyWidgetState extends State<ListTileWidget> {
     final theme = Theme.of(context).copyWith(
       dividerColor: Colors.transparent,
     );
-
     return Theme(
         data: theme,
         child: Obx(
           () => ListTileTheme(
             child: ExpansionTile(
-              // tilePadding: const EdgeInsets.symmetric(horizontal: 5),
-
               title: Row(
                 children: [
                   Text(
@@ -44,13 +42,13 @@ class _MyWidgetState extends State<ListTileWidget> {
                   Visibility(
                     visible: insuranceController.isSubstanceUse.isTrue,
                     child: Text(
-                      "(Substance Use)",
+                      AppStrings.substanceUse,
                     ),
                   ),
                   Visibility(
                     visible: insuranceController.isMentalHealth.isTrue,
                     child: Text(
-                      "(Mental Health)",
+                      AppStrings.mentalHealth,
                     ),
                   ),
                 ],
@@ -65,8 +63,6 @@ class _MyWidgetState extends State<ListTileWidget> {
                           onTap: () {
                             insuranceController.isSubstanceUse.value =
                                 !insuranceController.isSubstanceUse.value;
-                            debugPrint(
-                                "Check my value 51:  ${insuranceController.isSubstanceUse.value}");
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -80,7 +76,7 @@ class _MyWidgetState extends State<ListTileWidget> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Substance Use"),
+                              child: Text(AppStrings.substanceUseSText),
                             ),
                           ),
                         ),
@@ -93,8 +89,6 @@ class _MyWidgetState extends State<ListTileWidget> {
                           onTap: () {
                             insuranceController.isMentalHealth.value =
                                 !insuranceController.isMentalHealth.value;
-                            debugPrint(
-                                "Check my value 51:  ${insuranceController.isMentalHealth.value}");
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -108,13 +102,11 @@ class _MyWidgetState extends State<ListTileWidget> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Mental Health"),
+                              child: Text(AppStrings.mentalHealthText),
                             ),
                           ),
                         ),
                       ),
-
-                      // Add other widgets here
                     ],
                   ),
                 )

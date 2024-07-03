@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   final RxBool user = false.obs;
   getUser() async {
     user.value = (await Preferances.prefGetBool("isUser", false))!;
-    debugPrint("Check user $user");
   }
 
   @override

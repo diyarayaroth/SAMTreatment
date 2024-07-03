@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
-import 'dart:convert';
 import 'package:health_care/Api/network.dart';
 import 'package:health_care/constants/baseurl.dart';
 import 'package:health_care/screens/Home/model/insurance_model.dart';
@@ -76,12 +75,13 @@ class InsuranceController extends GetxController {
 
   @override
   void onInit() {
-    dropdownValue = distanceList[4].obs;
+    dropdownValue = AppConst.distanceList[4].obs;
     filterChipList
         .addAll([...facilities, ...populerFilter, ...paymentAcceptedCheckList]);
     super.onInit();
   }
 
+//facility filter used for filter the facilities
   void facilityFilter() {
     bool isSubstanceUseSelected = false;
     bool isMentalHealthSelected = false;
@@ -134,6 +134,7 @@ class InsuranceController extends GetxController {
         : '0';
   }
 
+//aPIcall function used for get the insurance list
   aPIcall() {
     zipCodeController.text.isNotEmpty
         ? onSearchFilter(false)
@@ -227,6 +228,7 @@ class InsuranceController extends GetxController {
     }
   }
 
+//onSearchFilter function used for filter the insurance list
   onSearchFilter(
     bool isLoadMore,
   ) {
@@ -254,12 +256,12 @@ class InsuranceController extends GetxController {
     getInsuranceList(bodyValue);
   }
 
+//getInsuranceList function used for get the insurance list
   getInsuranceList(
     BodyModel bodyValue,
   ) async {
     isLoading.value = true;
     String? apiUrl = baseUrl;
-    debugPrint("Check my api url $apiUrl}");
     var body = {
       "sType": bodyValue.sType,
       "sAddr": bodyValue.sAddr,
@@ -273,7 +275,6 @@ class InsuranceController extends GetxController {
       "page": bodyValue.page,
       "sort": bodyValue.sort,
     };
-    debugPrint("Check my body ${jsonEncode(body)}");
     var headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
@@ -293,7 +294,6 @@ class InsuranceController extends GetxController {
           getInsListRes.addAll(insList.rows ?? []);
           isLoading.value = false;
         }
-        debugPrint("Check my ins list 21 ${jsonEncode(getInsListRes)}");
       } else {
         isLoading.value = false;
         throw Exception(result.data);
@@ -303,16 +303,14 @@ class InsuranceController extends GetxController {
       isLoading.value = false;
       isSearching.value = false;
       CommonFunctions.toast("Please Select Correct Location");
-      debugPrint("Check my error $e");
     }
   }
 
+//loadMore function used for load more the insurance list pagination
   loadMore() async {
-    debugPrint("Check my page number before ${pageNumber.value}");
     if (!isLoading.value) {
       pageNumber.value++;
       isLoading.value = true;
-      debugPrint("Check my page number after ${pageNumber.value}");
       await onSearchFilter(true);
     }
   }
