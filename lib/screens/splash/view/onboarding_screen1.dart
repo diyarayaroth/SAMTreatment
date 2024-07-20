@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:health_care/screens/Home/view/home.dart';
 import 'package:health_care/screens/splash/Controller/onboarding_controller.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
@@ -68,7 +69,8 @@ class OnboardingScreen extends StatelessWidget {
               onTap: controller.onGetStarted,
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 50),
+          developedBy(),
         ]),
       ),
     );

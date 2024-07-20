@@ -84,22 +84,33 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                   child: Column(
                     children: [
-                      PrimaryTextField(
-                        controller: insuranceController.zipCodeController,
-                        onChanged: (value) async {
-                          if (await CommonFunctions.checkConnectivity()) {
-                            // Your code here if connectivity is true
-                            if (value.isEmpty) {
-                              insuranceController.isSearching.value = false;
-                            } else {
-                              searchController.getPredictions(value);
-                              insuranceController.isSearching.value = true;
+                      Obx(
+                        () => PrimaryTextField(
+                          controller: insuranceController.zipCodeController,
+                          onChanged: (value) async {
+                            if (await CommonFunctions.checkConnectivity()) {
+                              // Your code here if connectivity is true
+                              if (value.isEmpty) {
+                                insuranceController.isSearching.value = false;
+                              } else {
+                                searchController.getPredictions(value);
+                                insuranceController.isSearching.value = true;
+                              }
                             }
-                          }
-                        },
-                        hintText: 'Enter Zip Code Or City',
-                        prefix: const Icon(Icons.search),
-                        color: Colors.white,
+                          },
+                          hintText: 'Enter Zip Code Or City',
+                          prefix: insuranceController.isSearching.value == false
+                              ? Icon(Icons.search)
+                              : InkWell(
+                                  onTap: () {
+                                    insuranceController.zipCodeController
+                                        .clear();
+                                    insuranceController.isSearching.value =
+                                        false;
+                                  },
+                                  child: Icon(Icons.clear)),
+                          color: Colors.white,
+                        ),
                       ),
                       verticalSpacing(10),
                       Obx(
@@ -468,7 +479,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                               ),
                   ],
                 )),
-              )
+              ),
+              developedBy(),
             ],
           ),
         ),
@@ -612,4 +624,44 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
       ],
     );
   }
+}
+
+Widget developedBy() {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        child: Center(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Developed by :",
+                      style: AppTextStyle.regulerS14Black
+                          .copyWith(fontSize: 12, fontWeight: FontWeight.w600)),
+                  horizontalSpacing(5),
+                  Text("Diya Rayaroth",
+                      style:
+                          AppTextStyle.regulerS14Black.copyWith(fontSize: 12)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Inspiration :",
+                      style: AppTextStyle.regulerS14Black
+                          .copyWith(fontSize: 12, fontWeight: FontWeight.w600)),
+                  horizontalSpacing(5),
+                  Text("Norma Lopez.",
+                      style:
+                          AppTextStyle.regulerS14Black.copyWith(fontSize: 12)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
 }

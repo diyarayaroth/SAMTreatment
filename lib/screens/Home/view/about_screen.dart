@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:health_care/screens/Home/model/insurance_model.dart';
+import 'package:health_care/screens/Home/view/home.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
 import 'package:health_care/utils/app_string.dart';
@@ -53,205 +54,215 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
         title: AppStrings.treatment,
       ),
       body: PrimaryPadding(
-        child: ListView(
+        child: Column(
           children: [
-            Text(
-              "${widget.providerElement.name1}",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Divider(
-              thickness: 0.5,
-              color: AppColor.greyColor,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.call, color: Colors.black, size: 16),
-                    horizontalSpacing(5),
-                    // Text(" ${widget.providerElement.phone}",
-                    //     style: AppTextStyle.regulerS14Black),
-                    InkWell(
-                      onTap: () {
-                        // ignore: deprecated_member_use
-                        launch("tel:${widget.providerElement.phone}");
-                      },
-                      child: Text(
-                          " ${widget.providerElement.phone?.substring(0, 12)}",
-                          style: AppTextStyle.regulerS14Black),
+            Expanded(
+              child: ListView(
+                children: [
+                  Text(
+                    "${widget.providerElement.name1}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Image.asset(AppAsset.locationIcon, height: 15, width: 15),
-                    horizontalSpacing(5),
-                    Text("${widget.providerElement.miles} Miles",
-                        style: AppTextStyle.regulerS14Black),
-                  ],
-                ),
-              ],
-            ),
-            verticalSpacing(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.language, color: Colors.black, size: 16),
-                    horizontalSpacing(5),
-                    InkWell(
-                      onTap: () {
-                        // ignore: deprecated_member_use
-                        launch("${widget.providerElement.website}");
-                      },
-                      child: SizedBox(
-                        width: context.width * 0.7,
-                        child: Text(
-                          " ${widget.providerElement.website}",
-                          style: AppTextStyle.regulerS14Black.copyWith(
-                            color: Colors.blue,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            verticalSpacing(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.location_on,
-                        color: Colors.black, size: 16),
-                    horizontalSpacing(5),
-                    SizedBox(
-                      width: context.width * 0.7,
-                      child: Text(
-                        "${widget.providerElement.street1}, ${widget.providerElement.city}, ${widget.providerElement.state}, ${widget.providerElement.zip}",
-                        style: AppTextStyle.regulerS14Black,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            verticalSpacing(10),
-            SizedBox(
-              height: context.height * 0.3,
-              width: double.infinity,
-              child: buildMap(lat.value, long.value, address.value),
-            ),
-            verticalSpacing(10),
-            Row(
-              children: [
-                Image.asset(AppAsset.alertIcon, height: 15, width: 15),
-                horizontalSpacing(5),
-                SizedBox(
-                  width: context.width * 0.8,
-                  child: Text(
-                      "This facility does not offer transportation assistance.",
-                      style:
-                          AppTextStyle.regulerS14Black.copyWith(fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2),
-                ),
-              ],
-            ),
-            verticalSpacing(5),
-            const Divider(
-              thickness: 0.5,
-              color: AppColor.greyColor,
-            ),
-            verticalSpacing(10),
-            Row(
-              children: [
-                Image.asset((AppAsset.cardIcon), height: 20, width: 20),
-                horizontalSpacing(10),
-                SizedBox(
-                  width: context.width * 0.8,
-                  child: Text(
-                      "Contact this facility to make sure they take your specific insurance or coverage.",
-                      style: AppTextStyle.regulerS14Black
-                          .copyWith(fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2),
-                ),
-              ],
-            ),
-            verticalSpacing(15),
-            Row(
-              children: [
-                Image.asset((AppAsset.servicesIcon), height: 20, width: 20),
-                horizontalSpacing(10),
-                SizedBox(
-                  width: context.width * 0.8,
-                  child: Text("Sevrvices",
-                      style: AppTextStyle.appBarTextTitle.copyWith(
-                        fontSize: 18,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2),
-                ),
-              ],
-            ),
-            verticalSpacing(10),
-            SizedBox(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.providerElement.services?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final service = widget.providerElement.services?[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  const Divider(
+                    thickness: 0.5,
+                    color: AppColor.greyColor,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${service?.f1}",
-                        style: AppTextStyle.regulerS14Black.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      verticalSpacing(5),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset((AppAsset.rightIcon),
-                              height: 12, width: 12),
+                          const Icon(Icons.call, color: Colors.black, size: 16),
                           horizontalSpacing(5),
-                          SizedBox(
-                            width: context.width * 0.8,
+                          // Text(" ${widget.providerElement.phone}",
+                          //     style: AppTextStyle.regulerS14Black),
+                          InkWell(
+                            onTap: () {
+                              // ignore: deprecated_member_use
+                              launch("tel:${widget.providerElement.phone}");
+                            },
                             child: Text(
-                              "${service?.f3}",
-                              style: AppTextStyle.regulerS14Black
-                                  .copyWith(fontSize: 14),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 4,
+                                " ${widget.providerElement.phone?.substring(0, 12)}",
+                                style: AppTextStyle.regulerS14Black),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(AppAsset.locationIcon,
+                              height: 15, width: 15),
+                          horizontalSpacing(5),
+                          Text("${widget.providerElement.miles} Miles",
+                              style: AppTextStyle.regulerS14Black),
+                        ],
+                      ),
+                    ],
+                  ),
+                  verticalSpacing(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.language,
+                              color: Colors.black, size: 16),
+                          horizontalSpacing(5),
+                          InkWell(
+                            onTap: () {
+                              // ignore: deprecated_member_use
+                              launch("${widget.providerElement.website}");
+                            },
+                            child: SizedBox(
+                              width: context.width * 0.7,
+                              child: Text(
+                                " ${widget.providerElement.website}",
+                                style: AppTextStyle.regulerS14Black.copyWith(
+                                  color: Colors.blue,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      verticalSpacing(10),
-                      const Divider(
-                        thickness: 0.5,
-                        color: AppColor.greyColor,
+                    ],
+                  ),
+                  verticalSpacing(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.location_on,
+                              color: Colors.black, size: 16),
+                          horizontalSpacing(5),
+                          SizedBox(
+                            width: context.width * 0.7,
+                            child: Text(
+                              "${widget.providerElement.street1}, ${widget.providerElement.city}, ${widget.providerElement.state}, ${widget.providerElement.zip}",
+                              style: AppTextStyle.regulerS14Black,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-                  );
-                },
+                  ),
+                  verticalSpacing(10),
+                  SizedBox(
+                    height: context.height * 0.3,
+                    width: double.infinity,
+                    child: buildMap(lat.value, long.value, address.value),
+                  ),
+                  verticalSpacing(10),
+                  Row(
+                    children: [
+                      Image.asset(AppAsset.alertIcon, height: 15, width: 15),
+                      horizontalSpacing(5),
+                      SizedBox(
+                        width: context.width * 0.8,
+                        child: Text(
+                            "This facility does not offer transportation assistance.",
+                            style: AppTextStyle.regulerS14Black
+                                .copyWith(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2),
+                      ),
+                    ],
+                  ),
+                  verticalSpacing(5),
+                  const Divider(
+                    thickness: 0.5,
+                    color: AppColor.greyColor,
+                  ),
+                  verticalSpacing(10),
+                  Row(
+                    children: [
+                      Image.asset((AppAsset.cardIcon), height: 20, width: 20),
+                      horizontalSpacing(10),
+                      SizedBox(
+                        width: context.width * 0.8,
+                        child: Text(
+                            "Contact this facility to make sure they take your specific insurance or coverage.",
+                            style: AppTextStyle.regulerS14Black
+                                .copyWith(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2),
+                      ),
+                    ],
+                  ),
+                  verticalSpacing(15),
+                  Row(
+                    children: [
+                      Image.asset((AppAsset.servicesIcon),
+                          height: 20, width: 20),
+                      horizontalSpacing(10),
+                      SizedBox(
+                        width: context.width * 0.8,
+                        child: Text("Sevrvices",
+                            style: AppTextStyle.appBarTextTitle.copyWith(
+                              fontSize: 18,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2),
+                      ),
+                    ],
+                  ),
+                  verticalSpacing(10),
+                  SizedBox(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.providerElement.services?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final service = widget.providerElement.services?[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${service?.f1}",
+                              style: AppTextStyle.regulerS14Black.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            verticalSpacing(5),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset((AppAsset.rightIcon),
+                                    height: 12, width: 12),
+                                horizontalSpacing(5),
+                                SizedBox(
+                                  width: context.width * 0.8,
+                                  child: Text(
+                                    "${service?.f3}",
+                                    style: AppTextStyle.regulerS14Black
+                                        .copyWith(fontSize: 14),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 4,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            verticalSpacing(10),
+                            const Divider(
+                              thickness: 0.5,
+                              color: AppColor.greyColor,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
               ),
-            )
+            ),
+            developedBy(),
           ],
         ),
       ),
