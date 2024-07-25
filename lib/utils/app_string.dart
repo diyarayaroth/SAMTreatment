@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 class AppStrings {
+  static const String findTreatment =  "Find Treatment >>";
   // Onboarding
   static const String healthcare = 'Health Care';
   static const String getStarted = 'Get Started';

@@ -89,7 +89,6 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                           controller: insuranceController.zipCodeController,
                           onChanged: (value) async {
                             if (await CommonFunctions.checkConnectivity()) {
-                              // Your code here if connectivity is true
                               if (value.isEmpty) {
                                 insuranceController.isSearching.value = false;
                               } else {
@@ -573,6 +572,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(
                     Icons.circle_sharp,
@@ -580,10 +580,12 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                     size: 10,
                   ),
                   horizontalSpacing(10),
-                  Text(
-                    "Deselect the Distance, County or State constraint",
-                    style: AppTextStyle.reguler12grey.copyWith(
-                      color: AppColor.blackColor,
+                  Expanded(
+                    child: Text(
+                      "Deselect the Distance, County or State constraint",
+                      style: AppTextStyle.reguler12grey.copyWith(
+                        color: AppColor.blackColor,
+                      ),
                     ),
                   ),
                 ],
@@ -606,6 +608,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
             ),
             verticalSpacing(10),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons.circle,
@@ -613,9 +616,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                   size: 10,
                 ),
                 horizontalSpacing(10),
-                const Text(
-                  "Reduce the number of selected filter types",
-                  style: AppTextStyle.regulerS14Black,
+                Expanded(
+                  child: const Text(
+                    "Reduce the number of selected filter types",
+                    style: AppTextStyle.regulerS14Black,
+                  ),
                 ),
               ],
             ),
@@ -649,15 +654,17 @@ Widget developedBy() {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Inspiration :",
+                  Text("Mentor & Motivator :",
                       style: AppTextStyle.regulerS14Black
                           .copyWith(fontSize: 12, fontWeight: FontWeight.w600)),
                   horizontalSpacing(5),
-                  Text("Norma Lopez.",
+                  Text("Norma Lopez, LCSWR",
                       style:
                           AppTextStyle.regulerS14Black.copyWith(fontSize: 12)),
                 ],
               ),
+              Text("Thanks again...",
+                  style: AppTextStyle.regulerS14Black.copyWith(fontSize: 12)),
             ],
           ),
         ),

@@ -5,6 +5,8 @@ import 'package:health_care/screens/Home/view/home.dart';
 import 'package:health_care/screens/splash/view/onboarding_screen1.dart';
 import 'package:health_care/utils/app_asset.dart';
 import 'package:health_care/utils/app_color.dart';
+import 'package:health_care/utils/app_string.dart';
+import 'package:health_care/utils/helper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -39,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.primaryColor,
+      backgroundColor: AppColor.whiteColor,
       body: Stack(
         children: [
           Container(
@@ -48,20 +50,26 @@ class _SplashScreenState extends State<SplashScreen> {
             decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(AppAsset.splash), fit: BoxFit.cover)),
-            child: Center(
-                child: Image.asset(
-              AppAsset.splashLogo,
-              height: 200,
-              width: 200,
-            )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  AppAsset.splashLogo,
+                  height: 200,
+                  width: 200,
+                ),
+                verticalSpacing(30),
+                const Text(
+                  AppStrings.findTreatment,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromRGBO(72, 130, 9, 1)),
+                )
+              ],
+            ),
           ),
-          Positioned(
-            //bottom center
-            bottom: 10,
-            left: 0,
-            right: 0,
-            child: developedBy(),
-          )
         ],
       ),
     );

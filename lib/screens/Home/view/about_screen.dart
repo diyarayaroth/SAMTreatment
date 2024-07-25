@@ -262,7 +262,7 @@ class _InsuranceAboutScreenState extends State<InsuranceAboutScreen> {
                 ],
               ),
             ),
-            developedBy(),
+           // developedBy(),
           ],
         ),
       ),
