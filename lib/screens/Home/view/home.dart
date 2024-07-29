@@ -112,6 +112,9 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                   insuranceController.zipCodeController.clear();
                                   insuranceController.isSearching.value = false;
                                   insuranceController.isBack.value = false;
+                                  insuranceController.isFirst.value = true;
+                                  insuranceController.getInsListRes.obs.value
+                                      .clear();
                                 },
                                 child: const Icon(Icons.cancel)),
                         color: Colors.white,
@@ -245,7 +248,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
               () => Expanded(
                   child: ListView(
                 controller: scrollController,
-                physics: insuranceController.getInsListRes.isEmpty
+                physics: insuranceController.getInsListRes.obs.value.isEmpty
                     ? const NeverScrollableScrollPhysics()
                     : const AlwaysScrollableScrollPhysics(),
                 children: [
@@ -445,10 +448,10 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                     ],
                   ),
                   insuranceController.isLoading.value == true &&
-                          insuranceController.getInsListRes.isEmpty
+                          insuranceController.getInsListRes.obs.value.isEmpty
                       ? shimmerEffect(5)
-                      : insuranceController.getInsListRes.isEmpty
-                          ? insuranceController.isFirst.value
+                      : insuranceController.getInsListRes.obs.value.isEmpty
+                          ? insuranceController.isFirst.obs.value.isTrue
                               ? noData()
                               : noDataSearch()
                           : ListView.separated(

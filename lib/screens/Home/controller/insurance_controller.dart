@@ -9,7 +9,7 @@ import 'package:health_care/utils/constant.dart';
 import 'package:health_care/utils/function.dart';
 
 class InsuranceController extends GetxController {
-  List<Rows> getInsListRes = <Rows>[].obs;
+  var getInsListRes = <Rows>[].obs;
   List<Location> locations = <Location>[].obs;
   var distanceController = [].obs;
   var dropdownValue = ''.obs;
@@ -289,7 +289,7 @@ class InsuranceController extends GetxController {
       if (result != null) {
         InsuranceListModel insList = InsuranceListModel.fromJson(result);
         if (pageNumber.value == 1) {
-          getInsListRes = insList.rows ?? [];
+          getInsListRes = (insList.rows ?? []).obs as RxList<Rows>;
           isLoading.value = false;
         } else {
           getInsListRes.addAll(insList.rows ?? []);
@@ -309,10 +309,15 @@ class InsuranceController extends GetxController {
 
 //loadMore function used for load more the insurance list pagination
   loadMore() async {
-    if (!isLoading.value) {
-      pageNumber.value++;
-      isLoading.value = true;
-      await onSearchFilter(true);
+    if (isBack.value == false) {
+      pageNumber.value = 1;
+      isBack.value = false;
+    } else {
+      if (!isLoading.value) {
+        pageNumber.value++;
+        isLoading.value = true;
+        await onSearchFilter(true);
+      }
     }
   }
 }

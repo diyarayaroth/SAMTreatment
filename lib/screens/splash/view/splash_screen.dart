@@ -61,14 +61,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   height: 200,
                   width: 200,
                 ),
-                verticalSpacing(30),
-                const Text(
-                  AppStrings.findTreatment,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromRGBO(72, 130, 9, 1)),
-                )
+                // verticalSpacing(30),
+                // const Text(
+                //   AppStrings.findTreatment,
+                //   style: TextStyle(
+                //       fontSize: 20,
+                //       fontWeight: FontWeight.w700,
+                //       color: Color.fromRGBO(72, 130, 9, 1)),
+                // )
               ],
             ),
           ),
