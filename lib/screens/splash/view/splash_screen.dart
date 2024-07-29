@@ -30,11 +30,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   getStarted() {
     Future.delayed(const Duration(seconds: 3), () {
-      if (user.value == true) {
-        Get.to(const InsuranceScreen());
-      } else {
-        Get.to(OnboardingScreen());
-      }
+      // if (user.value == true) {
+      //   Get.to(const InsuranceScreen());
+      // } else {
+      //   Get.to(OnboardingScreen());
+      // }
+      // Get.to(OnboardingScreen());
+      Get.offAll(OnboardingScreen());
     });
   }
 

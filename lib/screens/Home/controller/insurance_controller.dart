@@ -53,6 +53,7 @@ class InsuranceController extends GetxController {
   ];
 
   RxBool isSearching = false.obs;
+  RxBool isBack = false.obs;
   RxBool isFacilityTab = false.obs;
   RxBool isLoading = false.obs;
   RxBool isMentalHealth = false.obs;

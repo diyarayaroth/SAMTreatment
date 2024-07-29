@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:health_care/screens/Home/view/home.dart';
 import 'package:health_care/screens/splash/Controller/onboarding_controller.dart';
 import 'package:health_care/utils/app_asset.dart';
@@ -15,62 +16,65 @@ class OnboardingScreen extends StatelessWidget {
   final OnboardingController controller = Get.put(OnboardingController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(children: [
-          Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  right: Sizes.s20.w,
-                ),
-                child: Image.asset(
-                  AppAsset.on1,
-                  fit: BoxFit.fill,
-                  height: Get.height * 0.50,
-                  width: Get.width,
-                ),
-              ),
-              verticalSpacing(103),
-              PrimaryPadding(
-                child: Column(
-                  children: [
-                    const Text(AppStrings.searchForTreatment,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.blackColor,
-                        )),
-                    verticalSpacing(10),
-                    const Text(
-                      AppStrings.ontext,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColor.greyColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          verticalSpacing(20),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Column(children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: CustomButton(
-              txtColor: AppColor.whiteColor,
-              bgColor: AppColor.primaryColor,
-              text: AppStrings.getStarted,
-              borderRadius: 10,
-              height: Sizes.s50.h,
-              width: Sizes.s330.w,
-              onTap: controller.onGetStarted,
+            padding: EdgeInsets.only(
+              right: Sizes.s20.w,
+            ),
+            child: Image.asset(
+              AppAsset.on1,
+              fit: BoxFit.fill,
+              height: Get.height * 0.50,
+              width: Get.width,
             ),
           ),
-          const SizedBox(height: 50),
-        //  developedBy(),
+          verticalSpacing(80),
+          Expanded(
+            child: Column(
+              children: [
+                PrimaryPadding(
+                  child: Column(
+                    children: [
+                      const Text(AppStrings.searchForTreatment,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.blackColor,
+                          )),
+                      verticalSpacing(10),
+                      const Text(
+                        AppStrings.ontext,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColor.greyColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                verticalSpacing(20),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: CustomButton(
+                    txtColor: AppColor.whiteColor,
+                    bgColor: AppColor.primaryColor,
+                    text: AppStrings.getStarted,
+                    borderRadius: 10,
+                    height: Sizes.s50.h,
+                    width: Sizes.s330.w,
+                    onTap: controller.onGetStarted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          developedBy(),
+          const SizedBox(height: 10),
         ]),
       ),
     );
