@@ -47,5 +47,7 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Sam Treatment application need your location to find a better result for you.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs access to location when open.</string>
 </dict>
 </plist>

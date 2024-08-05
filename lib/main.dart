@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           }
         },
         child: GetMaterialApp(
-          title: 'Health Care',
+          title: 'SAM TREATMENT',
           debugShowCheckedModeBanner: false,
           theme: ThemeUtils.lightTheme,
           home: const SplashScreen(),

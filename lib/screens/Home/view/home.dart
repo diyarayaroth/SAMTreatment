@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:health_care/screens/Home/controller/insurance_controller.dart';
 import 'package:health_care/screens/Home/controller/place_search_controller.dart';
@@ -32,11 +33,19 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
   final insuranceController = Get.put(InsuranceController());
   final searchController = Get.put(PlaceSearchController());
   final ScrollController scrollController = ScrollController();
+  // Location? curlocation =
+  //     Location(lat: 37.54027714220828, lng: -121.97935679366444);
 
   @override
   void initState() {
     super.initState();
     CommonFunctions.checkConnectivity();
+    // CommonFunctions.getCurrentLocation().then((value) {
+    //   curlocation = Location(
+    //     lat: value.latitude,
+    //     lng: value.longitude,
+    //   );
+    // });
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
@@ -98,9 +107,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                             if (value.isEmpty) {
                               insuranceController.isSearching.value = false;
                             } else {
-                              searchController.getPredictions(value);
                               insuranceController.isSearching.value = true;
-                              insuranceController.isBack.value = true;
+                              searchController.getPredictions(value);
                             }
                           }
                         },

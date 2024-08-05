@@ -31,48 +31,47 @@ class OnboardingScreen extends StatelessWidget {
               width: Get.width,
             ),
           ),
-          verticalSpacing(80),
-          Expanded(
-            child: Column(
-              children: [
-                PrimaryPadding(
-                  child: Column(
-                    children: [
-                      const Text(AppStrings.searchForTreatment,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.blackColor,
-                          )),
-                      verticalSpacing(10),
-                      const Text(
-                        AppStrings.ontext,
+          Spacer(),
+          Column(
+            children: [
+              PrimaryPadding(
+                child: Column(
+                  children: [
+                    const Text(AppStrings.searchForTreatment,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 14,
-                          color: AppColor.greyColor,
-                        ),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.blackColor,
+                        )),
+                    verticalSpacing(10),
+                    const Text(
+                      AppStrings.ontext,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColor.greyColor,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                verticalSpacing(20),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: CustomButton(
-                    txtColor: AppColor.whiteColor,
-                    bgColor: AppColor.primaryColor,
-                    text: AppStrings.getStarted,
-                    borderRadius: 10,
-                    height: Sizes.s50.h,
-                    width: Sizes.s330.w,
-                    onTap: controller.onGetStarted,
-                  ),
+              ),
+              verticalSpacing(20),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: CustomButton(
+                  txtColor: AppColor.whiteColor,
+                  bgColor: AppColor.primaryColor,
+                  text: AppStrings.getStarted,
+                  borderRadius: 10,
+                  height: Sizes.s50.h,
+                  width: Sizes.s330.w,
+                  onTap: controller.onGetStarted,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+          Spacer(),
           developedBy(),
           const SizedBox(height: 10),
         ]),

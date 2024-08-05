@@ -45,8 +45,10 @@ dependencies:
   http:
   shimmer: ^3.0.0
   geocoding: ^3.0.0
+  geolocator: ^10.1.1
   skeletons: ^0.0.3
   google_places_flutter:
+  google_places_flutter: ^2.0.9
   google_maps_flutter: 
   google_maps_webservice: ^0.0.20-nullsafety.5
 

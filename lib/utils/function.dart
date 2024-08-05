@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 
 class CommonFunctions {
   static void toast(String info) {
@@ -35,4 +36,26 @@ class CommonFunctions {
       return false;
     }
   }
+
+  // check location permission and get current location
+  // static Future<Position> getCurrentLocation() async {
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       CommonFunctions.toast("Location permission denied");
+  //       return Future.error("Location permission denied");
+  //     }
+  //   }
+
+  //   if (permission == LocationPermission.deniedForever) {
+  //     CommonFunctions.toast("Location permission denied forever");
+  //     return Future.error("Location permission denied forever");
+  //   }
+
+  //   Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+  //   debugPrint("current Position: $position");
+  //   return position;
+  // }
 }
