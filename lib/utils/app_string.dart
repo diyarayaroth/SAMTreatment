@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 class AppStrings {
-  static const String findTreatment =  "Find Treatment >>";
+  static const String findTreatment = "Find Treatment >>";
   // Onboarding
   static const String healthcare = 'Health Care';
   static const String getStarted = 'Get Started';
@@ -42,6 +42,8 @@ class AppStrings {
   static const String bUPRENText =
       'Center for Substance Abuse Treatment (CSAT)';
   static const String unknown = 'unknown';
+  static const String developeBy = 'Developed By :';
+  static const String mentorMotivator = 'Mentor & Motivator :';
 
   // Dashboard
   static const String dashboard = 'Dashboard';

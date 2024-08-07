@@ -651,11 +651,11 @@ Widget developedBy() {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Developed by :",
+                  Text(AppStrings.developeBy,
                       style: AppTextStyle.regulerS14Black
                           .copyWith(fontSize: 12, fontWeight: FontWeight.w600)),
                   horizontalSpacing(5),
-                  Text("Diya Rayaroth",
+                  Text("Diya Rayaroth.",
                       style:
                           AppTextStyle.regulerS14Black.copyWith(fontSize: 12)),
                 ],
@@ -663,11 +663,11 @@ Widget developedBy() {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Mentor & Motivator :",
+                  Text(AppStrings.mentorMotivator,
                       style: AppTextStyle.regulerS14Black
                           .copyWith(fontSize: 12, fontWeight: FontWeight.w600)),
                   horizontalSpacing(5),
-                  Text("Norma Lopez, LCSWR",
+                  Text("Norma Lopez, LCSWR.",
                       style:
                           AppTextStyle.regulerS14Black.copyWith(fontSize: 12)),
                 ],
