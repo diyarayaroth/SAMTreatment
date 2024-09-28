@@ -26,6 +26,7 @@ class AppStrings {
   static const String searchPlaces = 'Search Places';
   static const String insurance = 'Insurance';
   static const String searchForTreatment = 'Search for Trusted Doctor';
+  static const String searchForTreatments = 'Search for Treatment';
   static const String treatment = 'Treatment';
   static const String help = 'Help';
   static const String male = 'Male';
