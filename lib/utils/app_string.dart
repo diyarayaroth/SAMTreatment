@@ -10,7 +10,7 @@ class AppStrings {
   static const String previous = 'Previous';
   static const String getStart = 'Continue';
 
-  static const String findDoctorOn1 = 'Find Trusted Doctors';
+  static const String findDoctorOn1 = 'Find Trusted Treatment';
   static const String chooseDoctorOn2 = 'Choose Best Doctors';
   static const String easyAppointmentOn3 = 'Easy Appointments';
   static const String ontext =
@@ -25,7 +25,7 @@ class AppStrings {
   static const String searchDoctor = 'Search Doctor';
   static const String searchPlaces = 'Search Places';
   static const String insurance = 'Insurance';
-  static const String searchForTreatment = 'Search For Treatment';
+  static const String searchForTreatment = 'Search for Trusted Doctor';
   static const String treatment = 'Treatment';
   static const String help = 'Help';
   static const String male = 'Male';
