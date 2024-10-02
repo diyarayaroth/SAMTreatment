@@ -63,7 +63,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
 
       appBar: SecondaryAppBar(
         isLeading: true,
-        title: AppStrings.searchForTreatments,
+        title: AppStrings.searchForTreatment,
         action: IconButton(
           icon: const Icon(
             Icons.filter_alt_outlined,
