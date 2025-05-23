@@ -1,3 +1,15 @@
+## 🔄 About This Repo
+
+This is a clean public release of the SAMTreatment app.
+
+A previous version of this repo included sensitive credentials and has been deleted for security reasons.  
+This version contains only secure, public-ready code.
+
+## 🧑 Original Author
+
+Developed by Diya Rayaroth  
+Founder, Tech4Giving — Using technology for mental health and social impact
+
 # SAMTreatment
 
 **SAMTreatment** is a free and confidential web-based application built to help individuals and families find mental health and substance abuse treatment facilities across the United States. It integrates directly with the official [SAMHSA (Substance Abuse and Mental Health Services Administration)](https://www.samhsa.gov/) API to ensure that users have access to verified, up-to-date information.
