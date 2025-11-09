@@ -10,7 +10,9 @@ const String kErrorMessage = 'Something went wrong. Please try again later.';
 
 class AppConst {
 // google API KEY //
-  static String googleApiKey = "GOOGLE_KEY_PSFILE";
+  // TODO: Replace with your Google Maps API key
+  // Get your key from: https://console.cloud.google.com/google/maps-apis
+  static String googleApiKey = const String.fromEnvironment('GOOGLE_MAPS_API_KEY', defaultValue: 'YOUR_API_KEY_HERE');
 
   // App Name //
   static String kAppName = 'SAM TREATMENT';
